@@ -1,0 +1,4 @@
+16: octubre 2016 a marzo 2017
+17: marzo 2017 a agosto 2017
+t1: datos para pruebas (10 líneas)
+t2: datos para pruebas (2000 líneas)
