@@ -1,0 +1,16 @@
+ÓRDENES DISPONIBLES
+===================
+AYUDA:            Muestra esta pantalla de ayuda.
+FICHERO:          Permite modificar la selección del fichero de usos a utilizar.
+USOS:             Escribe en la pantalla el número de usos de traslado y circulares.
+ESTADISTICAS:     Informa la distribución por edades y géneros de los usuarios.
+USUARIO <id-usuario>: Informa acerca del número de usos realizados por el
+                  usuario especificado.
+MAYORES <n>:      Escribe en la pantalla el número de usuarios distintos y los
+                  <n> usuarios que más usos han hecho del sistema.
+INFORME <nombre-fichero>: Escribe en el fichero especificado un informe con el
+                  número de usos de las estaciones, según el fichero seleccionado.
+DESTINOS:         Escribe en un fichero de texto o en la pantalla un informe en el
+                  que, para cada estación dada, se indica la estación a la que más 
+                  se ha viajado desde ella.
+FIN:              Termina la ejecución de este programa.

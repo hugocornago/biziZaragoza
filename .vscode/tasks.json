@@ -1,0 +1,84 @@
+{
+    "tasks": [
+        {
+            "label": "Open Terminal",
+            "type": "shell",
+            "command": "osascript -e 'tell application \"Terminal\"\ndo script \"echo hello\"\nend tell'",
+            "problemMatcher": []
+        },
+        {
+            "label": "Compilar «datos-pruebas»",
+            "type": "shell",
+            "command": "make",
+            "windows": {
+                "command": "mingw32-make.exe",
+            },
+            "args": [
+                "datos-pruebas"
+            ],
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+        },
+        {
+            "label": "Ejecutar «datos-pruebas»",
+            "type": "shell",
+            "command": "bin/datos-pruebas",
+            "windows": {
+                "command": "chcp 65001 ; bin\\datos-pruebas.exe",
+            },
+            "dependsOn": "Compilar «datos-pruebas»",
+            "problemMatcher": ["$gcc"],
+        },
+        {
+            "label": "Compilar «bizi»",
+            "type": "shell",
+            "command": "make",
+            "windows": {
+                "command": "mingw32-make.exe",
+            },
+            "args": [
+                "bizi"
+            ],
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        },
+        {
+            "label": "Ejecutar «bizi»",
+            "type": "shell",
+            "command": "bin/bizi",
+            "windows": {
+                "command": "chcp 65001 ; bin\\bizi",
+            },
+            "dependsOn": "Compilar «bizi»",
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Limpiar resultados de compilación",
+            "type": "shell",
+            "command": "make",
+            "windows": {
+                "command": "mingw32-make.exe",
+            },
+            "args": [
+                "clean"
+            ],
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+
+       },
+    ],
+    "presentation": {
+        "showReuseMessage": true,
+        "panel": "shared",
+        "reveal": "always",
+        "focus": true,
+    },
+    "version": "2.0.0"
+}
