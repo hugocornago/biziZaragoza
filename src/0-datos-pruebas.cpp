@@ -40,7 +40,7 @@ bool escribirFichero (string nombreFichero, string vector_lineas[], unsigned lon
         return false;
     }
     for (unsigned i = 0; i < longitud; i++){
-        cout << vector_lineas[i] << endl;
+        fichero << vector_lineas[i] << endl;
     }
     return true;
 }
