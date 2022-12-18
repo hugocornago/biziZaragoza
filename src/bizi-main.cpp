@@ -138,7 +138,7 @@ bool ejecutarOrden(const string& orden, Fichero& fichero) {
         return true;
     } else {
         /* No existe la orden que el usuario a solicitado */
-        cerr << "No existe la orden \"" << orden << "\"." << endl;
+        cerr << "Orden \"" << orden << "\" desconocida." << endl;
     }
 
     return false;
@@ -177,6 +177,7 @@ int main(){
              * En ese caso, saldremos del bucle. */
             parar = true;
         }
+        cout << endl;
     }
     return 0;
 }
