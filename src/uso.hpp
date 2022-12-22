@@ -12,10 +12,9 @@
 using namespace std;
 
 struct UsoBizi {
-    // Define los campos necesarios para representar los siguientes datos de un
-    // uso del sistema Bizi: el identificador del usuario que utiliza la
-    // bicicleta, el código de la estación de la que se retira la bicicleta y el
-    // código de la estación en la que se devuelve.
+    int identificador;
+    int estaciónRetira;
+    int estaciónDevuelve;
 };
 
 
