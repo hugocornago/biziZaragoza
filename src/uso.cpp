@@ -1,38 +1,39 @@
-﻿
-#include "uso.hpp"
+﻿#include "uso.hpp"
+#include <iostream>
+
+using namespace std;
 
 /* Pre: <fichero> debe estar incializado y su componente <f> debe apuntar a un
  *      fichero abierto con permisos de lectura.
  * Post: Devuelve "true" si ha podido obtener el numero de usos de ...
  *       En cualquier otro caso, devuelve "false".
  */
-bool ordenUsos(Fichero& fichero) {
-    string numTraslados;   
-    string numCirculares;
-    int numTotalUsos;
-    ifstream fichero_abierto {fichero.nombre};
-    if (!fichero_abierto.is_open()){
-        string cabecera;
-        getline(fichero_abierto, cabecera);
-        string uso;
-        while (getline(fichero_abierto, uso)){
-            // TODO
-            // numTotalUsos++;
-            // if(getline(fichero_abierto, numTraslados))
-            break;
-        }
-     }
-     
-    return true;
-}
+// bool ordenUsos(ifstream& fichero) {
+//     string numTraslados;   
+//     string numCirculares;
+//     int numTotalUsos;
+//     if (!fichero_abierto.is_open()){
+//         string cabecera;
+//         getline(fichero_abierto, cabecera);
+//         string uso;
+//         while (getline(fichero_abierto, uso)){
+//             // TODO
+//             // numTotalUsos++;
+//             // if(getline(fichero_abierto, numTraslados))
+//             break;
+//         }
+//      }
+//      
+//     return true;
+// }
 
 /* Pre: ---
  * Post: Imprime en pantalla información sobre los usos del fichero
  *       selecionado por el usuario.
  */
-void pantallaUsos(const Fichero& fichero) {
+void pantallaUsos(const std::string nombreFichero) {
     cout << "Orden: usos" << endl;
-    cout << "Fichero de usos seleccionado actualmente: " << fichero.nombre << "." << endl;
+    cout << "Fichero de usos seleccionado actualmente: " << nombreFichero << "." << endl;
     cout << "Número de usos como traslado: " << endl;
     cout << "Número de usos circulares: " << endl;
     cout << "Número total de usos: " << endl;
@@ -83,14 +84,12 @@ bool leerUso(istream& fichero, UsoBizi& uso) {
  *      estación.  En ese caso, devuelve «true» y en el caso contrario, «false».
  */
 
-bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares) {
-    leerUso(fichero,uso);
-    while (leerUso(istream& fichero, UsoBizi& uso)) {
-        traslados++;
-        if (){
-            usosCirculares++;
+
+/*bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares) {
+    leerUso(fichero, uso);
+    while (leerUso(fichero, uso)) {
+
         }
     }
 }
-
-
+*/
