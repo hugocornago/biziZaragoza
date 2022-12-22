@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <stdexcept>
 #include <string>
 #include <algorithm>
 using namespace std;
@@ -32,7 +33,7 @@ string selectorDeFichero() {
     cout << "17: marzo 2017 a agosto 2017" << endl;
     cout << "t1: datos para pruebas (10 líneas)" << endl;
     cout << "t2: datos para pruebas (2000 líneas)" << endl;
-    cout << "Introduzca una opción: " << endl;
+    cout << "Introduzca una opción: ";
 
     string opcion;
     cin >> opcion;
@@ -46,7 +47,7 @@ string selectorDeFichero() {
  *       de la función selectorDeFichero().
  *       La función modifica la componente <nombre> y <f> del parametro <fichero>.
  */
-bool cambiarFichero(Fichero& fichero) {
+bool ordenFichero(Fichero& fichero) {
     const auto& nombre_fichero = selectorDeFichero();
     ifstream fichero_abierto {nombre_fichero};
     if (!fichero_abierto.is_open()) {
@@ -100,25 +101,56 @@ bool ordenUsos(Fichero& fichero) {
 }
 
 /* Pre: ---
+ * Post: Ejecuta la orden "ESTADISTICAS".
+ */
+bool ordenEstadisticas(Fichero& fichero) {
+    throw logic_error("Función aun no implementada!");
+}
+/* Pre: ---
+ * Post: Ejecuta la orden "USUARIO".
+ */
+bool ordenUsuario(Fichero& fichero, std::string args) {
+    throw logic_error("Función aun no implementada!");
+}
+/* Pre: ---
+ * Post: Ejecuta la orden "MAYORES".
+ */
+bool ordenMayores(Fichero& fichero, std::string args) {
+    throw logic_error("Función aun no implementada!");
+}
+/* Pre: ---
+ * Post: Ejecuta la orden "INFORME".
+ */
+bool ordenInforme(Fichero& fichero, std::string args) {
+    throw logic_error("Función aun no implementada!");
+}
+/* Pre: ---
+ * Post: Ejecuta la orden "DESTINOS".
+ */
+bool ordenDestinos(Fichero& fichero, std::string args) {
+    throw logic_error("Función aun no implementada!");
+}
+
+/* Pre: ---
  * Post: Imprime en pantalla las posibles ordenes que estan
  *       implementadas y puede usar el usuario.
  */
 void imprimirOrdenesDisponibles () {
     cout << "ÓRDENES DISPONIBLES" << endl;
     cout << "===================" << endl;
-    cout << "AYUDA:" << setw(9) << "Muestra esta pantalla de ayuda." << endl;
+    cout << "AYUDA: " << setw(9) << "Muestra esta pantalla de ayuda." << endl;
     cout << "FICHERO: Permite modificar la selección del fichero de usos a utilizar." << endl;
-    cout << "USOS:" << setw(9) << "Escribe en la pantalla el número de usos de traslado y circulares." << endl;
+    cout << "USOS: " << setw(9) << "Escribe en la pantalla el número de usos de traslado y circulares." << endl;
     cout << "ESTADISTICAS:" << setw(9) << "Informa la distribución por edades y géneros de los usuarios." << endl;
-    cout << "USUARIO <id-usuario>: Informa acerca del número de usos realizados por el" << endl; 
-    cout << setw(9) << "usuario especificado." << endl;
-    cout << "MAYORES <n>: " << setw(9) << "Escribe en la pantalla el número de usuarios distintos y los" << endl;
-    cout << setw(9) << "<n> usuarios que más usos han hecho del sistema." << endl;
+    cout << "USUARIO <id-usuario>: Informa acerca del número de usos realizados por el"
+         << "usuario especificado." << endl;
+    cout << "MAYORES <n>: " << setw(9) << "Escribe en la pantalla el número de usuarios distintos y los"
+         << "<n> usuarios que más usos han hecho del sistema." << endl;
     cout << "INFORME <nombre-fichero>: Escribe en el fichero especificado un informe con el" << endl;
     cout << "número de usos de las estaciones, según el fichero seleccionado." << endl;
-    cout << "DESTINOS: <nombre-fichero>: " << setw(9) << "Escribe en el fichero especificado un informe en" << endl;
-    cout << setw(9) << "el que, para cada estación dada, se indica la estación a la que más." << endl;
-    cout << setw(9) << "se ha viajado desde ella." << endl;
+    cout << "DESTINOS: <nombre-fichero>: " << setw(9) << "Escribe en el fichero especificado un informe en"
+         << "el que, para cada estación dada, se indica la estación a la que más."
+         << "se ha viajado desde ella." << endl;
     cout << "FIN: " << setw(9) << "Termina la ejecución de este programa." << endl;
 }
 
@@ -131,9 +163,27 @@ bool ejecutarOrden(const string& orden, Fichero& fichero) {
     if (orden == "AYUDA") {
         imprimirOrdenesDisponibles();
     } else if (orden == "FICHERO") {
-        while (!cambiarFichero(fichero));
+        while (!ordenFichero(fichero));
     } else if (orden == "USOS") {
         ordenUsos(fichero);
+    } else if (orden == "ESTADISTICAS") {
+        ordenEstadisticas(fichero);
+    } else if (orden == "USUARIO") {
+        string args;
+        cin >> args;
+        ordenUsuario(fichero, args);
+    } else if (orden == "MAYORES") {
+        string args;
+        cin >> args;
+        ordenMayores(fichero, args);
+    } else if (orden == "INFORME") {
+        string args;
+        cin >> args;
+        ordenInforme(fichero, args);
+    } else if (orden == "DESTINOS") {
+        string args;
+        cin >> args;
+        ordenDestinos(fichero, args);
     } else if (orden == "FIN") {
         return true;
     } else {
@@ -151,6 +201,7 @@ bool ejecutarOrden(const string& orden, Fichero& fichero) {
  *       Devuelve la salida de la función ejectuarOrden.
  */
 bool elejirOrden(Fichero& fichero) {
+    cout << "Orden: ";
     string orden;
     cin >> orden;
 
@@ -170,6 +221,7 @@ int main(){
     Fichero f;
     bool parar {false};
 
+    while (!ordenFichero(f)) {};
     imprimirOrdenesDisponibles();
     while (!parar) {
         if (elejirOrden(f)) {
