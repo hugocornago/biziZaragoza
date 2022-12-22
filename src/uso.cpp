@@ -49,19 +49,30 @@ void pantallaUsos(const Fichero& fichero) {
  *       la bicicleta. Devuelve «true» si no se han terminado los datos del fichero en el
  *       intento de lectura descrito y y «false» en caso contrario.
  */
+
 bool leerUso(istream& fichero, UsoBizi& uso) {
-    ordenFichero(Fichero& fichero);
-    ofstream f(fichero);
-    if (f.is_open(fichero)) {
-
+    string DELIMITADOR = ';';
+    string IDUsuario;
+    if(getline(fichero, IDUsuario, DELIMITADOR)){
+        uso.identificador = stoi(IDUsuario);
+        string retiroDT;
+        getline (fichero,retiroDT, DELIMITADOR);
+        string RetiroEstacion;
+        getline (fichero, RetiroEstacion, DELIMITADOR);
+        uso.estacionRetira = stoi(RetiroEstacion);
+        getline AnclajeDT;
+        getline (fichero, AnclajeDT, DELIMITADOR);
+        string AnclajeEstacion;
+        getline (fichero, AnclajeEstacion, DELIMITADOR);
+        uso.estacionDevuelve = stoi(AnclajeEstacion);
+        return true;
     }
-    else{
-        cerr << "No se ha podido abrir el fichero" << endl;
+    else {
+        return false;
     }
-
 }
 
-*
+/*
  * Pre:  La cadena de caracteres «nombreFicheroUsos» representa la ruta de acceso y el nombre
  *       de un fichero de texto con el formato de usos del sistema Bizi establecido en el
  *       enunciado.
@@ -71,6 +82,15 @@ bool leerUso(istream& fichero, UsoBizi& uso) {
  *       de usos contenidos en dicho fichero que tienen como origen y destino la misma 
  *      estación.  En ese caso, devuelve «true» y en el caso contrario, «false».
  */
-bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares);
+
+bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares) {
+    leerUso(fichero,uso);
+    while (leerUso(istream& fichero, UsoBizi& uso)) {
+        traslados++;
+        if (){
+            usosCirculares++;
+        }
+    }
+}
 
 

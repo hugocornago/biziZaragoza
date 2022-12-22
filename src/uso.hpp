@@ -9,6 +9,7 @@
 #pragma once
 
 #include <istream>
+#include <vector>
 using namespace std;
 
 struct UsoBizi {
@@ -16,7 +17,6 @@ struct UsoBizi {
     int estaciónRetira;
     int estaciónDevuelve;
 };
-
 
 /*
  * Pre:  El flujo «f» está asociado con un fichero de texto con el formato de usos del sistema
@@ -28,7 +28,7 @@ struct UsoBizi {
  *       la bicicleta. Devuelve «true» si no se han terminado los datos del fichero en el
  *       intento de lectura descrito y y «false» en caso contrario.
  */
-bool leerUso(istream& f, UsoBizi& uso);
+bool leerUso(istream& fichero, UsoBizi& uso);
 
 
 /*
