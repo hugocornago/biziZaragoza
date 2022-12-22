@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <string>
 #include <algorithm>
+#include "uso.hpp"
 using namespace std;
 
 /* Estructura de datos que almacenara información basica sobre
@@ -81,23 +82,11 @@ void pantallaUsos(const Fichero& fichero) {
  *       En cualquier otro caso, devuelve "false".
  */
 bool ordenUsos(Fichero& fichero) {
-    string numTraslados;   
-    string numCirculares;
-    int numTotalUsos;
-    ifstream fichero_abierto {fichero.nombre};
-    if (!fichero_abierto.is_open()){
-        string cabecera;
-        getline(fichero_abierto, cabecera);
-        string uso;
-        while (getline(fichero_abierto, uso)){
-            // TODO
-            // numTotalUsos++;
-            // if(getline(fichero_abierto, numTraslados))
-            break;
-        }
-     }
-     
-    return true;
+    istream flujo = fichero.f;
+    string cabecera;
+    getline(flujo,cabecera);
+    UsoBizi uso;
+    leerUso(flujo,uso);
 }
 
 /* Pre: ---
