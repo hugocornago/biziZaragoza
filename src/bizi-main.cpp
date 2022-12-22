@@ -10,6 +10,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include <algorithm>
 using namespace std;
 
@@ -81,23 +82,7 @@ void pantallaUsos(const Fichero& fichero) {
  *       En cualquier otro caso, devuelve "false".
  */
 bool ordenUsos(Fichero& fichero) {
-    string numTraslados;   
-    string numCirculares;
-    int numTotalUsos;
-    ifstream fichero_abierto {fichero.nombre};
-    if (!fichero_abierto.is_open()){
-        string cabecera;
-        getline(fichero_abierto, cabecera);
-        string uso;
-        while (getline(fichero_abierto, uso)){
-            // TODO
-            // numTotalUsos++;
-            // if(getline(fichero_abierto, numTraslados))
-            break;
-        }
-     }
-     
-    return true;
+    throw logic_error("Función aun no implementada!");
 }
 
 /* Pre: ---
@@ -152,6 +137,7 @@ void imprimirOrdenesDisponibles () {
          << "el que, para cada estación dada, se indica la estación a la que más."
          << "se ha viajado desde ella." << endl;
     cout << "FIN: " << setw(9) << "Termina la ejecución de este programa." << endl;
+    cout << endl;
 }
 
 /* Pre: ---
@@ -221,7 +207,11 @@ int main(){
     Fichero f;
     bool parar {false};
 
-    while (!ordenFichero(f)) {};
+    while (!ordenFichero(f)) {
+        cout << endl;
+    };
+    cout << endl;
+
     imprimirOrdenesDisponibles();
     while (!parar) {
         if (elejirOrden(f)) {
