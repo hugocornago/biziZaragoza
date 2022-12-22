@@ -5,6 +5,7 @@
  * Resumen: Fichero de implementación del módulo principal que implementa el trabajo
  *          obligatorio de Programación 1 del curso 2022-23.
 \*********************************************************************************************/
+#include "usuarios.hpp"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -20,7 +21,7 @@ using namespace std;
  */
 struct Fichero {
     string nombre;
-    ifstream* f;
+    ifstream f;
 };
 
 /* Pre: ---
@@ -50,6 +51,7 @@ string selectorDeFichero() {
  */
 bool ordenFichero(Fichero& fichero) {
     const auto& nombre_fichero = selectorDeFichero();
+    fichero.f = std::ifstream(nombre_fichero);
     ifstream fichero_abierto {nombre_fichero};
     if (!fichero_abierto.is_open()) {
         cerr << "No se ha podido leer el fichero \"" << nombre_fichero << "\"" << endl;
@@ -57,7 +59,6 @@ bool ordenFichero(Fichero& fichero) {
     }
 
     fichero.nombre = nombre_fichero;
-    fichero.f = &fichero_abierto;
 
     cout << "El fichero \"" << fichero.nombre << "\" existe y ha sido seleccionado." << endl;
     return true;
