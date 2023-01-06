@@ -14,8 +14,8 @@ using namespace std;
 
 struct UsoBizi {
     int identificador;
-    int estaciónRetira;
-    int estaciónDevuelve;
+    int estacionRetira;
+    int estacionDevuelve;
 };
 
 /*
