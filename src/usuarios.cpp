@@ -67,6 +67,7 @@ bool obtenerEstadisticas(const string nombreFicheroUsuarios,
         switch (estadistica.genero) {
         case 'M':
             estadisticas[idx][0]++;
+            break;
         case 'F':
             estadisticas[idx][1]++;
         }
@@ -97,12 +98,11 @@ unsigned indiceRangoEdad(const string rangoEdad) {
  *       En caso contrario, devuelve -1.
  */
 int indiceGenero(const string genero) {
-    for (unsigned i = 0; i < NUM_GENEROS; i++) {
-        if (genero == GENEROS[i]) {
-            return i;
-        }
+    switch (genero.at(0)) {
+        case 'M': return 0;
+        case 'F': return 1;
+        default:  return -1;
     }
-    return -1;
 }
 
 /*
@@ -141,4 +141,5 @@ bool buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario,
     else {
         return false;
     }
+    return true;
 }
