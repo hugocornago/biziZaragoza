@@ -45,7 +45,9 @@ unsigned indiceRangoEdad(const string rangoEdad);
  *       <género> establecida en el enunciado ("M" o "F"), devuelve, respectivamente, 0 o 1.
  *       En caso contrario, devuelve -1.
  */
-int indiceGenero(const string genero);
+int indiceGenero(const string genero){
+    
+}
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 

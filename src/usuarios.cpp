@@ -36,6 +36,7 @@ leerEstadistica(const string& linea, Estadistica& e) {
     e.genero = genero.at(0);
     e.rango_edad = rango_edad;
 }
+
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 
  *       regla <fichero-usuarios> establecida en el enunciado. La matriz «estadisticas» tiene
@@ -81,14 +82,13 @@ bool obtenerEstadisticas(const string nombreFicheroUsuarios,
  *       ("<=25", "26-35", "36-50", "51-65" o ">65"), respectivamente, 0, 1, 2, 3 o 4.
  */
 unsigned indiceRangoEdad(const string rangoEdad) {
-    for (int i = 0; i < 5; ++i) {
+    for (unsigned i = 0; i < NUM_EDADES; i++) {
         if (rangoEdad == RANGO_EDADES[i]) {
             return i;
         }
     }
-
     return 0;
-}
+}    
 
 /*
  * Pre:  ---
@@ -96,7 +96,14 @@ unsigned indiceRangoEdad(const string rangoEdad) {
  *       <género> establecida en el enunciado ("M" o "F"), devuelve, respectivamente, 0 o 1.
  *       En caso contrario, devuelve -1.
  */
-int indiceGenero(const string genero);
+int indiceGenero(const string genero) {
+    for (unsigned i = 0; i < NUM_GENEROS; i++) {
+        if (genero == GENEROS[i]) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 
@@ -107,5 +114,31 @@ int indiceGenero(const string genero);
  *       "M", "F" o "" en el caso de «genero» y "<=25", "26-35", "36-50", "51-65" o ">65" en el
  *       caso de «rangoEdad».
  */
-bool buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario,
-                   string& genero, string& rangoEdad);
+bool buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario, string& genero, string& rangoEdad) {
+    ifstream ficheroUsuarios(nombreFicheroUsuarios);
+    if (ficheroUsuarios.is_open()) {
+        string linea;
+        while (getline(ficheroUsuarios, linea)) {
+            stringstream lineaSS(linea);
+            unsigned id;
+            lineaSS >> id;
+            if (id == idUsuario) {
+                char generoChar;
+                lineaSS >> generoChar;
+                if (generoChar == 'M') {
+                    genero = "M";
+                } else if (generoChar == 'F') {
+                    genero = "F";
+                } else {
+                    genero = "";
+                }
+                getline(lineaSS, rangoEdad, ',');
+                return true;
+            }
+        }
+        ficheroUsuarios.close();
+    }
+    else {
+        return false;
+    }
+}

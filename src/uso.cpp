@@ -1,5 +1,6 @@
 ﻿#include "uso.hpp"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -31,7 +32,7 @@ using namespace std;
  * Post: Imprime en pantalla información sobre los usos del fichero
  *       selecionado por el usuario.
  */
-void pantallaUsos(const std::string nombreFichero) {
+void pantallaUsos(const string nombreFichero) {
     cout << "Orden: usos" << endl;
     cout << "Fichero de usos seleccionado actualmente: " << nombreFichero << "." << endl;
     cout << "Número de usos como traslado: " << endl;
@@ -50,17 +51,28 @@ void pantallaUsos(const std::string nombreFichero) {
  *       la bicicleta. Devuelve «true» si no se han terminado los datos del fichero en el
  *       intento de lectura descrito y y «false» en caso contrario.
  */
-// bool leerUso(istream& fichero, UsoBizi& uso) {
-//     ordenFichero(Fichero& fichero);
-//     ofstream f(fichero);
-//     if (f.is_open(fichero)) {
-//
-//     }
-//     else{
-//         cerr << "No se ha podido abrir el fichero" << endl;
-//     }
-//
-// }
+
+bool leerUso(istream& fichero, UsoBizi& uso) {
+    char DELIMITADOR = ';';
+    string IDUsuario;
+    if(getline(fichero, IDUsuario, DELIMITADOR)){
+        uso.identificador = stoi(IDUsuario);
+        string retiroDT;
+        getline (fichero,retiroDT, DELIMITADOR);
+        string RetiroEstacion;
+        getline (fichero, RetiroEstacion, DELIMITADOR);
+        uso.estacionRetira = stoi(RetiroEstacion);
+        string AnclajeDT;
+        getline (fichero, AnclajeDT, DELIMITADOR);
+        string AnclajeEstacion;
+        getline (fichero, AnclajeEstacion, DELIMITADOR);
+        uso.estacionDevuelve = stoi(AnclajeEstacion);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 /*
  * Pre:  La cadena de caracteres «nombreFicheroUsos» representa la ruta de acceso y el nombre
@@ -72,5 +84,42 @@ void pantallaUsos(const std::string nombreFichero) {
  *       de usos contenidos en dicho fichero que tienen como origen y destino la misma 
  *      estación.  En ese caso, devuelve «true» y en el caso contrario, «false».
  */
-bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares);
+
+
+bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares) {
+    // Abrimos el fichero de usos
+    ifstream fichero {nombreFicheroUsos};
+
+    // Si no se ha podido abrir, devolvemos false
+    if (!fichero.is_open()) {
+        return false;
+    }
+    // Inicializamos los contadores a 0
+    traslados = 0;
+    usosCirculares = 0;
+    // Leemos el primer uso del fichero
+    UsoBizi uso;
+    leerUso(fichero, uso);
+    // Mientras haya usos en el fichero
+    while (fichero.good()) {
+        // Si el uso es circular, incrementamos el contador de usos circulares
+        if (uso.estacionRetira == uso.estacionDevuelve) {
+            usosCirculares++;
+        }
+        // Si el uso no es circular, incrementamos el contador de traslados
+        else {
+            traslados++;
+        }
+        // Leemos el siguiente uso del fichero
+        leerUso(fichero, uso);
+    }
+    // Cerramos el fichero y devolvemos true
+    fichero.close();
+    return true;
+}
+
+    
+
+
+
 

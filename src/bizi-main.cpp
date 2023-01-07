@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "uso.hpp"
 using namespace std;
 
 /* Estructura de datos que almacenara información basica sobre
@@ -82,8 +83,12 @@ void pantallaUsos(const Fichero& fichero) {
  * Post: Devuelve "true" si ha podido obtener el numero de usos de ...
  *       En cualquier otro caso, devuelve "false".
  */
-bool ordenUsos(Fichero& fichero) {
-    throw logic_error("Función aun no implementada!");
+bool ordenUsos(Fichero fichero) {
+    auto flujo = fichero.f;
+    string cabecera;
+    getline(flujo,cabecera);
+    UsoBizi uso;
+    leerUso(flujo,uso);
 }
 
 /* Pre: ---
