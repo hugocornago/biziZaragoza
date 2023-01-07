@@ -16,6 +16,8 @@
 #include "uso.hpp"
 using namespace std;
 
+const string NOMBRE_FICHERO_USUARIOS {"datos/usuarios.csv"};
+
 /* Pre: ---
  * Post: Imprime al usuario una lista de los posibles fichero que 
  *       estan disponibles para el programa y pregunta cual quiere elegir.
@@ -58,17 +60,21 @@ bool ordenFichero(string& nombreFichero) {
 }
 
 /* Pre: ---
- * Post: Imprime en pantalla información sobre los usos del fichero
- *       selecionado por el usuario.
+ * Post: Imprime en pantalla la estadistica de los usuarios de BiziZaragoza.
  */
-// void pantallaUsos(const string& nombreFichero) {
-//     cout << "Orden: usos" << endl;
-//     cout << "Fichero de usos seleccionado actualmente: " << nombreFichero << "." << endl;
-//     cout << "Número de usos como traslado: " << endl;
-//     cout << "Número de usos circulares: " << endl;
-//     cout << "Número total de usos: " << endl;
-//     cout << "Orden: " << endl;
-// }
+void imprimirEstadisticas(unsigned estadistica[][NUM_GENEROS]) 
+{
+    /* cabezera */
+    cout << "Distribución de los usuarios" << endl
+         << setw(7) << "|" << setw(6) << "M" << setw(7) << "F" << endl
+         << "------+----------------" << endl;
+    for (unsigned i = 0; i < NUM_EDADES; ++i) {
+        cout << left << setw(6) << RANGO_EDADES[i] << "|"
+             << right << setw(7) << estadistica[i][0]
+             << right << setw(7) << estadistica[i][1]
+             << endl;
+    }
+}
 
 /* Pre: <fichero> debe estar incializado y su componente <f> debe apuntar a un
  *      fichero abierto con permisos de lectura.
@@ -87,14 +93,41 @@ bool ordenUsos(const string& nombreFichero) {
 /* Pre: ---
  * Post: Ejecuta la orden "ESTADISTICAS".
  */
-bool ordenEstadisticas(const string& nombreFichero) {
-    throw logic_error("Función aun no implementada!");
+bool ordenEstadisticas(const string& nombreFichero)
+{
+    unsigned estadisticas[NUM_EDADES][NUM_GENEROS];
+    /* Inicializar estadisticas a 0 */
+    for (unsigned j = 0; j < NUM_EDADES; j++) {
+        for (unsigned k = 0; k < NUM_GENEROS; k++) {
+            estadisticas[j][k] = 0;
+        }
+    }
+    if (!obtenerEstadisticas(NOMBRE_FICHERO_USUARIOS, estadisticas)) return false;
+    imprimirEstadisticas(estadisticas);
+    return true;
 }
 /* Pre: ---
  * Post: Ejecuta la orden "USUARIO".
  */
-bool ordenUsuario(const string& nombreFichero, std::string args) {
-    throw logic_error("Función aun no implementada!");
+bool ordenUsuario(const string& nombreFichero, const string& usuarioABuscar) {
+    string genero, rangoEdad;
+    unsigned IDUsuario = stoi(usuarioABuscar);
+    if (buscarUsuario(NOMBRE_FICHERO_USUARIOS, IDUsuario, genero, rangoEdad)) {
+        if (genero == "M") {
+            cout << "El usuario " << IDUsuario << " está en el rango de edad \""
+                 << rangoEdad << "\"." << endl;
+        } else if (genero == "F") {
+            cout << "La usuaria " << IDUsuario << " está en el rango de edad \""
+                 << rangoEdad << "\"." << endl;
+        } else {
+            cout << "El/la usuario/a " << IDUsuario << " está en el rango de edad \""
+                 << rangoEdad << "\"." << endl;
+        }
+    } else {
+        cout << "El/la usuario/a " << IDUsuario << " no aparece en el fichero \""
+             << NOMBRE_FICHERO_USUARIOS << "\"." << endl;
+    }
+    return true;
 }
 /* Pre: ---
  * Post: Ejecuta la orden "MAYORES".
@@ -151,11 +184,13 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
     } else if (orden == "USOS") {
         ordenUsos(nombreFichero);
     } else if (orden == "ESTADISTICAS") {
-        ordenEstadisticas(nombreFichero);
+        if(!ordenEstadisticas(nombreFichero)) {
+            cerr << "ERROR";
+        };
     } else if (orden == "USUARIO") {
-        string args;
-        cin >> args;
-        ordenUsuario(nombreFichero, args);
+        string usuario;
+        cin >> usuario;
+        ordenUsuario(nombreFichero, usuario);
     } else if (orden == "MAYORES") {
         string args;
         cin >> args;

@@ -1,7 +1,7 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
  * Autores: Jaime Alonso y Hugo Cornago
- * Ultima revisión: ¡¡¡!!!
+ * Ultima revisión: 07-01-2023
  * Resumen: Fichero de interfaz «usuarios.hpp» de un módulo para trabajar con el fichero de 
  *          usuarios del sistema Bizi Zaragoza.
 \*********************************************************************************************/
@@ -13,28 +13,20 @@
 #include <iostream>
 using namespace std;
 
-constexpr char DELIMITADOR {';'};
-
-struct Estadistica {
-    unsigned identificador;
-    char genero;
-    std::string rango_edad;
-};
-
 void
-leerEstadistica(const string& linea, Estadistica& e) {
+leerUsuario(const string& linea, Usuario& usuario) {
     istringstream stream(linea);
 
     string id;
     getline(stream, id, DELIMITADOR);
     string genero;
     getline(stream, genero, DELIMITADOR);
-    string rango_edad;
-    getline(stream, rango_edad, DELIMITADOR);
+    string rangoEdad;
+    getline(stream, rangoEdad);
 
-    e.identificador = stoi(id);
-    e.genero = genero.at(0);
-    e.rango_edad = rango_edad;
+    usuario.identificador = stoi(id);
+    usuario.genero = genero;
+    usuario.rangoEdad = rangoEdad;
 }
 
 /*
@@ -61,15 +53,14 @@ bool obtenerEstadisticas(const string nombreFicheroUsuarios,
     string S;
     getline(fichero, S); // ignorar la cabezera.
     while (getline(fichero, S)) {
-        Estadistica estadistica;
-        leerEstadistica(S, estadistica);
-        auto idx = indiceRangoEdad(estadistica.rango_edad);
-        switch (estadistica.genero) {
-        case 'M':
-            estadisticas[idx][0]++;
-            break;
-        case 'F':
-            estadisticas[idx][1]++;
+        Usuario usuario;
+        leerUsuario(S, usuario);
+        auto indice_edad = indiceRangoEdad(usuario.rangoEdad);
+        auto indice_genero = indiceGenero(usuario.genero);
+
+        /* Si tiene un genero especificado, contabilizarlo en la estadistica */
+        if (indice_genero != -1) {
+            estadisticas[indice_edad][indice_genero]++;
         }
     }
 
@@ -98,10 +89,11 @@ unsigned indiceRangoEdad(const string rangoEdad) {
  *       En caso contrario, devuelve -1.
  */
 int indiceGenero(const string genero) {
+    if (genero.empty()) return -1;
     switch (genero.at(0)) {
-        case 'M': return 0;
-        case 'F': return 1;
-        default:  return -1;
+    case 'M': return 0;
+    case 'F': return 1;
+    default:  return -1;
     }
 }
 
@@ -114,32 +106,30 @@ int indiceGenero(const string genero) {
  *       "M", "F" o "" en el caso de «genero» y "<=25", "26-35", "36-50", "51-65" o ">65" en el
  *       caso de «rangoEdad».
  */
-bool buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario, string& genero, string& rangoEdad) {
+bool
+buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario, string& genero, string& rangoEdad) {
     ifstream ficheroUsuarios(nombreFicheroUsuarios);
     if (ficheroUsuarios.is_open()) {
         string linea;
+        getline(ficheroUsuarios, linea); // ignorar la cabezera
         while (getline(ficheroUsuarios, linea)) {
-            stringstream lineaSS(linea);
-            unsigned id;
-            lineaSS >> id;
-            if (id == idUsuario) {
-                char generoChar;
-                lineaSS >> generoChar;
-                if (generoChar == 'M') {
-                    genero = "M";
-                } else if (generoChar == 'F') {
-                    genero = "F";
-                } else {
-                    genero = "";
-                }
-                getline(lineaSS, rangoEdad, ',');
+            Usuario usuario;
+            leerUsuario(linea, usuario);
+
+            if (usuario.identificador == idUsuario) {
+                genero = usuario.genero;
+                rangoEdad = usuario.rangoEdad;
+
+                ficheroUsuarios.close();
                 return true;
+            } else if (usuario.identificador > idUsuario) {
+                /* Como los usuarios del fichero <nombreFicheroUsuarios> estan en
+                   orden creciente, podemos concluir que no existe el usuario. */ 
+                ficheroUsuarios.close();
+                return false;
             }
         }
-        ficheroUsuarios.close();
     }
-    else {
-        return false;
-    }
-    return true;
+
+    return false;
 }

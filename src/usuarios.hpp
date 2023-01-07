@@ -14,6 +14,16 @@ using namespace std;
 const unsigned NUM_EDADES = 5;
 const unsigned NUM_GENEROS = 2;
 const string RANGO_EDADES[NUM_EDADES] = {"<=25", "26-35", "36-50", "51-65", ">65"};
+const char DELIMITADOR {';'};
+
+/*
+ * Estructura de un usuario de BiziZaragoza.
+ */
+struct Usuario {
+    unsigned identificador;
+    string genero;
+    string rangoEdad;
+};
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 
