@@ -14,7 +14,7 @@ using namespace std;
 const unsigned NUM_EDADES = 5;
 const unsigned NUM_GENEROS = 2;
 const string RANGO_EDADES[NUM_EDADES] = {"<=25", "26-35", "36-50", "51-65", ">65"};
-const char DELIMITADOR {';'};
+const char DELIMITADOR_USUARIOS {';'};
 
 /*
  * Estructura de un usuario de BiziZaragoza.
@@ -24,6 +24,9 @@ struct Usuario {
     string genero;
     string rangoEdad;
 };
+
+/* */
+bool leerUsuario();
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 
@@ -68,3 +71,9 @@ int indiceGenero(const string genero);
  */
 bool buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario,
                    string& genero, string& rangoEdad);
+
+/*
+ * Pre: ---
+ * Post: Devuelve el numero de usuarios en el fichero <nombreFicheroUsuarios>.
+ */
+unsigned obtenerNumeroDeUsuarios(const string& nombreFicheroUsuarios);

@@ -6,6 +6,7 @@
  *          obligatorio de Programación 1 del curso 2022-23.
 \*********************************************************************************************/
 #include "usuarios.hpp"
+#include "usos-usuario.hpp"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -60,7 +61,7 @@ bool ordenFichero(string& nombreFichero) {
 }
 
 /* Pre: ---
- * Post: Imprime en pantalla la estadistica de los usuarios de BiziZaragoza.
+ * Post: Imprime en pantalla la estadistica de los usuarios.
  */
 void imprimirEstadisticas(unsigned estadistica[][NUM_GENEROS]) 
 {
@@ -76,6 +77,13 @@ void imprimirEstadisticas(unsigned estadistica[][NUM_GENEROS])
     }
 }
 
+/* Pre: ---
+ * Post: Imprime en pantalla usuarios y sus usos.
+ */
+void imprimirUsuarios(UsosUsuario usuarios[], const unsigned numUsuarios) 
+{
+    std::cout << "Número usuarios distintos: " << numUsuarios << std::endl;
+}
 /* Pre: <fichero> debe estar incializado y su componente <f> debe apuntar a un
  *      fichero abierto con permisos de lectura.
  * Post: Devuelve "true" si ha podido obtener el numero de usos
@@ -95,13 +103,8 @@ bool ordenUsos(const string& nombreFichero) {
  */
 bool ordenEstadisticas(const string& nombreFichero)
 {
-    unsigned estadisticas[NUM_EDADES][NUM_GENEROS];
     /* Inicializar estadisticas a 0 */
-    for (unsigned j = 0; j < NUM_EDADES; j++) {
-        for (unsigned k = 0; k < NUM_GENEROS; k++) {
-            estadisticas[j][k] = 0;
-        }
-    }
+    unsigned estadisticas[NUM_EDADES][NUM_GENEROS] = {};
     if (!obtenerEstadisticas(NOMBRE_FICHERO_USUARIOS, estadisticas)) return false;
     imprimirEstadisticas(estadisticas);
     return true;
@@ -133,7 +136,15 @@ bool ordenUsuario(const string& nombreFichero, const string& usuarioABuscar) {
  * Post: Ejecuta la orden "MAYORES".
  */
 bool ordenMayores(const string& nombreFichero, std::string args) {
-    throw logic_error("Función aun no implementada!");
+    unsigned liston = stoi(args);
+    unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(NOMBRE_FICHERO_USUARIOS);
+    UsosUsuario usuarios[numUsuariosMAX];
+
+    unsigned numUsuarios;
+    obtenerUsosPorUsuario(nombreFichero, usuarios, numUsuarios);
+    ordenar(usuarios, numUsuarios, liston);
+    imprimirUsuarios(usuarios, numUsuarios);
+    return true;
 }
 /* Pre: ---
  * Post: Ejecuta la orden "INFORME".

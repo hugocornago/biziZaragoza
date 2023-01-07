@@ -11,11 +11,16 @@
 #include <string>
 using namespace std;
 
+const char DELIMITADOR = ';';
+
 struct UsosUsuario {
     // Define los campos necesarios para representar los siguientes datos sobre las
     // utilizaciones del sistema Bizi de determinado usuario: su identificador de usuario,
     // el número de usos entre estaciones distintas realizadas por ese usuario y el número de
     // usos entre la misma estación.
+    int identificador {-1}; // -1 significa que no hay un usuario definido
+    unsigned int usosTransporte {0};
+    unsigned int usosCirculares {0};
 };
 
 

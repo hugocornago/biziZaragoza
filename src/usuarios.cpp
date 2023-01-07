@@ -13,20 +13,22 @@
 #include <iostream>
 using namespace std;
 
-void
-leerUsuario(const string& linea, Usuario& usuario) {
-    istringstream stream(linea);
+bool
+leerUsuario(istream& fichero, Usuario& usuario) {
+    string IDUsuario;
+    if (getline(fichero, IDUsuario, DELIMITADOR_USUARIOS)) {
+        string genero;
+        getline(fichero, genero, DELIMITADOR_USUARIOS);
+        string rangoEdad;
+        getline(fichero, rangoEdad);
 
-    string id;
-    getline(stream, id, DELIMITADOR);
-    string genero;
-    getline(stream, genero, DELIMITADOR);
-    string rangoEdad;
-    getline(stream, rangoEdad);
+        usuario.identificador = stoi(IDUsuario);
+        usuario.genero = genero;
+        usuario.rangoEdad = rangoEdad;
+        return true;
+    }
 
-    usuario.identificador = stoi(id);
-    usuario.genero = genero;
-    usuario.rangoEdad = rangoEdad;
+    return false;
 }
 
 /*
@@ -52,9 +54,8 @@ bool obtenerEstadisticas(const string nombreFicheroUsuarios,
 
     string S;
     getline(fichero, S); // ignorar la cabezera.
-    while (getline(fichero, S)) {
-        Usuario usuario;
-        leerUsuario(S, usuario);
+    Usuario usuario;
+    while (leerUsuario(fichero, usuario)) {
         auto indice_edad = indiceRangoEdad(usuario.rangoEdad);
         auto indice_genero = indiceGenero(usuario.genero);
 
@@ -82,6 +83,24 @@ unsigned indiceRangoEdad(const string rangoEdad) {
     return 0;
 }    
 
+/*
+ * Pre: ---
+ * Post: Devuelve el numero de usuarios en el fichero <nombreFicheroUsuarios>.
+ */
+unsigned obtenerNumeroDeUsuarios(const string& nombreFicheroUsuarios) {
+    ifstream fichero {nombreFicheroUsuarios};
+    /* ignorar la cabezera */
+    string linea;
+    getline(fichero, linea);
+
+    unsigned numeroDeUsuarios {0};
+    Usuario usuario;
+    while (leerUsuario(fichero, usuario)) {
+        numeroDeUsuarios++;
+    }
+
+    return numeroDeUsuarios;
+}
 /*
  * Pre:  ---
  * Post: Si el valor del parámetro «genero» es uno de los valores válidos según la regla 
@@ -112,10 +131,9 @@ buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario, stri
     if (ficheroUsuarios.is_open()) {
         string linea;
         getline(ficheroUsuarios, linea); // ignorar la cabezera
-        while (getline(ficheroUsuarios, linea)) {
-            Usuario usuario;
-            leerUsuario(linea, usuario);
 
+        Usuario usuario;
+        while (leerUsuario(ficheroUsuarios, usuario)) {
             if (usuario.identificador == idUsuario) {
                 genero = usuario.genero;
                 rangoEdad = usuario.rangoEdad;
