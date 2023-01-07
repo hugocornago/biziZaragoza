@@ -9,12 +9,10 @@
 #include "usuarios.hpp" 
 #include <fstream>
 #include <string>
-#include <sstream>
 #include <iostream>
 using namespace std;
 
-bool
-leerUsuario(istream& fichero, Usuario& usuario) {
+bool leerUsuario(istream& fichero, Usuario& usuario) {
     string IDUsuario;
     if (getline(fichero, IDUsuario, DELIMITADOR_USUARIOS)) {
         string genero;
@@ -125,8 +123,7 @@ int indiceGenero(const string genero) {
  *       "M", "F" o "" en el caso de «genero» y "<=25", "26-35", "36-50", "51-65" o ">65" en el
  *       caso de «rangoEdad».
  */
-bool
-buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario, string& genero, string& rangoEdad) {
+bool buscarUsuario(const string nombreFicheroUsuarios, const unsigned idUsuario, string& genero, string& rangoEdad) {
     ifstream ficheroUsuarios(nombreFicheroUsuarios);
     if (ficheroUsuarios.is_open()) {
         string linea;

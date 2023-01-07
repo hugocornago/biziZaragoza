@@ -18,6 +18,9 @@ const int NUM_ESTACIONES = 130;
 struct Estacion {
     // Define los campos para representar los siguientes datos de una estación Bizi:
     // el identificador de la estación, su nombre y el número de usos de la misma.
+    int identificador;
+    string nombre;
+    int numeroUsos;
 };
 
 /*
