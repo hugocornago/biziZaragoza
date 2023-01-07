@@ -16,15 +16,6 @@
 #include "uso.hpp"
 using namespace std;
 
-/* Estructura de datos que almacenara información basica sobre
- * un fichero (su nombre), y un puntero a la lectura del mismo con el fin de
- * minimizar el numero de aperturas del fichero.
- */
-struct Fichero {
-    string nombre;
-    ifstream f;
-};
-
 /* Pre: ---
  * Post: Imprime al usuario una lista de los posibles fichero que 
  *       estan disponibles para el programa y pregunta cual quiere elegir.
@@ -40,9 +31,11 @@ string selectorDeFichero() {
 
     string opcion;
     cin >> opcion;
-    string fichero = "datos/usos-" + opcion + ".csv";
 
-    return fichero;
+    /* Ruta relavtiva */
+    string ruta_fichero = "datos/usos-" + opcion + ".csv";
+
+    return ruta_fichero;
 }
 
 /* Pre: ---
@@ -50,18 +43,17 @@ string selectorDeFichero() {
  *       de la función selectorDeFichero().
  *       La función modifica la componente <nombre> y <f> del parametro <fichero>.
  */
-bool ordenFichero(Fichero& fichero) {
+bool ordenFichero(string& nombreFichero) {
     const auto& nombre_fichero = selectorDeFichero();
-    fichero.f = std::ifstream(nombre_fichero);
+
     ifstream fichero_abierto {nombre_fichero};
     if (!fichero_abierto.is_open()) {
         cerr << "No se ha podido leer el fichero \"" << nombre_fichero << "\"" << endl;
         return false;
     }
 
-    fichero.nombre = nombre_fichero;
-
-    cout << "El fichero \"" << fichero.nombre << "\" existe y ha sido seleccionado." << endl;
+    nombreFichero = nombre_fichero;
+    cout << "El fichero \"" << nombreFichero << "\" existe y ha sido seleccionado." << endl;
     return true;
 }
 
@@ -69,56 +61,57 @@ bool ordenFichero(Fichero& fichero) {
  * Post: Imprime en pantalla información sobre los usos del fichero
  *       selecionado por el usuario.
  */
-void pantallaUsos(const Fichero& fichero) {
-    cout << "Orden: usos" << endl;
-    cout << "Fichero de usos seleccionado actualmente: " << fichero.nombre << "." << endl;
-    cout << "Número de usos como traslado: " << endl;
-    cout << "Número de usos circulares: " << endl;
-    cout << "Número total de usos: " << endl;
-    cout << "Orden: " << endl;
-}
+// void pantallaUsos(const string& nombreFichero) {
+//     cout << "Orden: usos" << endl;
+//     cout << "Fichero de usos seleccionado actualmente: " << nombreFichero << "." << endl;
+//     cout << "Número de usos como traslado: " << endl;
+//     cout << "Número de usos circulares: " << endl;
+//     cout << "Número total de usos: " << endl;
+//     cout << "Orden: " << endl;
+// }
 
 /* Pre: <fichero> debe estar incializado y su componente <f> debe apuntar a un
  *      fichero abierto con permisos de lectura.
- * Post: Devuelve "true" si ha podido obtener el numero de usos de ...
+ * Post: Devuelve "true" si ha podido obtener el numero de usos
  *       En cualquier otro caso, devuelve "false".
  */
-bool ordenUsos(Fichero fichero) {
-    auto flujo = fichero.f;
-    string cabecera;
-    getline(flujo,cabecera);
-    UsoBizi uso;
-    leerUso(flujo,uso);
+bool ordenUsos(const string& nombreFichero) {
+    unsigned int usosTransporte, usosCirculares, usosTotales;
+    if (!contarUsos(nombreFichero, usosTransporte, usosCirculares)) return false;
+
+    usosTotales = usosCirculares + usosTransporte;
+    pantallaUsos(nombreFichero, usosTransporte, usosCirculares, usosTotales);
+    return true;
 }
 
 /* Pre: ---
  * Post: Ejecuta la orden "ESTADISTICAS".
  */
-bool ordenEstadisticas(Fichero& fichero) {
+bool ordenEstadisticas(const string& nombreFichero) {
     throw logic_error("Función aun no implementada!");
 }
 /* Pre: ---
  * Post: Ejecuta la orden "USUARIO".
  */
-bool ordenUsuario(Fichero& fichero, std::string args) {
+bool ordenUsuario(const string& nombreFichero, std::string args) {
     throw logic_error("Función aun no implementada!");
 }
 /* Pre: ---
  * Post: Ejecuta la orden "MAYORES".
  */
-bool ordenMayores(Fichero& fichero, std::string args) {
+bool ordenMayores(const string& nombreFichero, std::string args) {
     throw logic_error("Función aun no implementada!");
 }
 /* Pre: ---
  * Post: Ejecuta la orden "INFORME".
  */
-bool ordenInforme(Fichero& fichero, std::string args) {
+bool ordenInforme(const string& nombreFichero, std::string args) {
     throw logic_error("Función aun no implementada!");
 }
 /* Pre: ---
  * Post: Ejecuta la orden "DESTINOS".
  */
-bool ordenDestinos(Fichero& fichero, std::string args) {
+bool ordenDestinos(const string& nombreFichero, std::string args) {
     throw logic_error("Función aun no implementada!");
 }
 
@@ -132,7 +125,7 @@ void imprimirOrdenesDisponibles () {
     cout << "AYUDA: " << setw(9) << "Muestra esta pantalla de ayuda." << endl;
     cout << "FICHERO: Permite modificar la selección del fichero de usos a utilizar." << endl;
     cout << "USOS: " << setw(9) << "Escribe en la pantalla el número de usos de traslado y circulares." << endl;
-    cout << "ESTADISTICAS:" << setw(9) << "Informa la distribución por edades y géneros de los usuarios." << endl;
+    cout << "ESTADISTICAS: " << setw(9) << "Informa la distribución por edades y géneros de los usuarios." << endl;
     cout << "USUARIO <id-usuario>: Informa acerca del número de usos realizados por el"
          << "usuario especificado." << endl;
     cout << "MAYORES <n>: " << setw(9) << "Escribe en la pantalla el número de usuarios distintos y los"
@@ -143,7 +136,6 @@ void imprimirOrdenesDisponibles () {
          << "el que, para cada estación dada, se indica la estación a la que más."
          << "se ha viajado desde ella." << endl;
     cout << "FIN: " << setw(9) << "Termina la ejecución de este programa." << endl;
-    cout << endl;
 }
 
 /* Pre: ---
@@ -151,31 +143,31 @@ void imprimirOrdenesDisponibles () {
  *       Devuelve "true" si el usuario a dado la orden "FIN".
  *       Devuelve "false" en cualquier otro caso.
  */
-bool ejecutarOrden(const string& orden, Fichero& fichero) {
+bool ejecutarOrden(const string& orden, string& nombreFichero) {
     if (orden == "AYUDA") {
         imprimirOrdenesDisponibles();
     } else if (orden == "FICHERO") {
-        while (!ordenFichero(fichero));
+        while (!ordenFichero(nombreFichero));
     } else if (orden == "USOS") {
-        ordenUsos(fichero);
+        ordenUsos(nombreFichero);
     } else if (orden == "ESTADISTICAS") {
-        ordenEstadisticas(fichero);
+        ordenEstadisticas(nombreFichero);
     } else if (orden == "USUARIO") {
         string args;
         cin >> args;
-        ordenUsuario(fichero, args);
+        ordenUsuario(nombreFichero, args);
     } else if (orden == "MAYORES") {
         string args;
         cin >> args;
-        ordenMayores(fichero, args);
+        ordenMayores(nombreFichero, args);
     } else if (orden == "INFORME") {
         string args;
         cin >> args;
-        ordenInforme(fichero, args);
+        ordenInforme(nombreFichero, args);
     } else if (orden == "DESTINOS") {
         string args;
         cin >> args;
-        ordenDestinos(fichero, args);
+        ordenDestinos(nombreFichero, args);
     } else if (orden == "FIN") {
         return true;
     } else {
@@ -192,7 +184,8 @@ bool ejecutarOrden(const string& orden, Fichero& fichero) {
  *       y llamar a la función ejectuarOrden con esa orden y el <fichero> proporcionado.
  *       Devuelve la salida de la función ejectuarOrden.
  */
-bool elejirOrden(Fichero& fichero) {
+bool elejirOrden(string& nombreFichero) {
+    cout << endl;
     cout << "Orden: ";
     string orden;
     cin >> orden;
@@ -205,27 +198,21 @@ bool elejirOrden(Fichero& fichero) {
          * dejamos que el compilador elija el mejor de ellos. */
         [](unsigned char c){ return toupper(c); });
 
-    return ejecutarOrden(orden, fichero);
+    return ejecutarOrden(orden, nombreFichero);
 }
 
 
 int main(){
-    Fichero f;
-    bool parar {false};
+    string nombreFichero;
 
-    while (!ordenFichero(f)) {
+    while (!ordenFichero(nombreFichero)) {
         cout << endl;
     };
     cout << endl;
 
     imprimirOrdenesDisponibles();
-    while (!parar) {
-        if (elejirOrden(f)) {
-            /* elejirOrden devuelve true cuando el usuario ha decidido salir del programa.
-             * En ese caso, saldremos del bucle. */
-            parar = true;
-        }
-        cout << endl;
-    }
+    while (!elejirOrden(nombreFichero));
+
+    std::cout << "Adios!" << std::endl;
     return 0;
 }

@@ -1,6 +1,8 @@
 ﻿#include "uso.hpp"
+#include <cstdio>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -32,13 +34,12 @@ using namespace std;
  * Post: Imprime en pantalla información sobre los usos del fichero
  *       selecionado por el usuario.
  */
-void pantallaUsos(const string nombreFichero) {
-    cout << "Orden: usos" << endl;
+void pantallaUsos(const string nombreFichero, const unsigned long numeroUsosTraslado,
+                  const unsigned long numeroUsosCirculares, const unsigned long numeroTotalUsos) {
     cout << "Fichero de usos seleccionado actualmente: " << nombreFichero << "." << endl;
-    cout << "Número de usos como traslado: " << endl;
-    cout << "Número de usos circulares: " << endl;
-    cout << "Número total de usos: " << endl;
-    cout << "Orden: " << endl;
+    cout << "Número de usos como traslado: " << numeroUsosTraslado << endl;
+    cout << "Número de usos circulares: "  << numeroUsosCirculares << endl;
+    cout << "Número total de usos: " << numeroTotalUsos << endl;
 }
 
 /*
@@ -65,7 +66,7 @@ bool leerUso(istream& fichero, UsoBizi& uso) {
         string AnclajeDT;
         getline (fichero, AnclajeDT, DELIMITADOR);
         string AnclajeEstacion;
-        getline (fichero, AnclajeEstacion, DELIMITADOR);
+        getline (fichero, AnclajeEstacion);
         uso.estacionDevuelve = stoi(AnclajeEstacion);
         return true;
     }
@@ -94,14 +95,18 @@ bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& u
     if (!fichero.is_open()) {
         return false;
     }
+
+    /* Ignorar la cabezera */
+    string cabezera;
+    getline(fichero, cabezera);
+
     // Inicializamos los contadores a 0
     traslados = 0;
     usosCirculares = 0;
-    // Leemos el primer uso del fichero
+
     UsoBizi uso;
-    leerUso(fichero, uso);
     // Mientras haya usos en el fichero
-    while (fichero.good()) {
+    while (leerUso(fichero, uso)) {
         // Si el uso es circular, incrementamos el contador de usos circulares
         if (uso.estacionRetira == uso.estacionDevuelve) {
             usosCirculares++;
@@ -110,8 +115,6 @@ bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& u
         else {
             traslados++;
         }
-        // Leemos el siguiente uso del fichero
-        leerUso(fichero, uso);
     }
     // Cerramos el fichero y devolvemos true
     fichero.close();

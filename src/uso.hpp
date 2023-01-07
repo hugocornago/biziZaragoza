@@ -42,3 +42,10 @@ bool leerUso(istream& fichero, UsoBizi& uso);
  *      estación.  En ese caso, devuelve «true» y en el caso contrario, «false».
  */
 bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& usosCirculares);
+
+/* Pre: ---
+ * Post: Imprime en pantalla información sobre los usos del fichero
+ *       selecionado por el usuario.
+ */
+void pantallaUsos(const string nombreFichero, const unsigned long numeroUsosTraslado,
+                  const unsigned long numeroUsosCirculares, const unsigned long numeroTotalUsos);
