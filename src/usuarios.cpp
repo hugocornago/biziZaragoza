@@ -1,21 +1,41 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
- * Autores: ¡¡¡PONED AQUÍ VUESTROS NOMBRES!!!
+ * Autores: Jaime Alonso y Hugo Cornago
  * Ultima revisión: ¡¡¡!!!
  * Resumen: Fichero de interfaz «usuarios.hpp» de un módulo para trabajar con el fichero de 
  *          usuarios del sistema Bizi Zaragoza.
 \*********************************************************************************************/
 
-#pragma once
-
-#include <string>
+#include "usuarios.hpp" 
 #include <fstream>
+#include <string>
 #include <sstream>
+#include <iostream>
 using namespace std;
 
-const unsigned NUM_EDADES = 5;
-const unsigned NUM_GENEROS = 2;
-const string RANGO_EDADES[NUM_EDADES] = {"<=25", "26-35", "36-50", "51-65", ">65"};
+constexpr char DELIMITADOR {';'};
+
+struct Estadistica {
+    unsigned identificador;
+    char genero;
+    std::string rango_edad;
+};
+
+void
+leerEstadistica(const string& linea, Estadistica& e) {
+    istringstream stream(linea);
+
+    string id;
+    getline(stream, id, DELIMITADOR);
+    string genero;
+    getline(stream, genero, DELIMITADOR);
+    string rango_edad;
+    getline(stream, rango_edad, DELIMITADOR);
+
+    e.identificador = stoi(id);
+    e.genero = genero.at(0);
+    e.rango_edad = rango_edad;
+}
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 
@@ -30,37 +50,29 @@ const string RANGO_EDADES[NUM_EDADES] = {"<=25", "26-35", "36-50", "51-65", ">65
  *       Si se puede leer del fichero «nombreFicheroUsuarios», devuelve «true» y, en caso
  *       contrario, devuelve «false».
  */
-bool obtenerEstadisticas(const string nombreFicheroUsuarios,unsigned estadisticas[][NUM_GENEROS],
-unsigned indiceRangoEdad(const string rangoEdad) ) {
-    // Abrir el archivo de entrada
-    ifstream fichero {nombreFicheroUsuarios};
-    // Comprobar si el archivo se ha abierto correctamente
-    if (!fichero) {
+bool obtenerEstadisticas(const string nombreFicheroUsuarios,
+                         unsigned estadisticas[][NUM_GENEROS])
+{
+    ifstream fichero(nombreFicheroUsuarios);
+    if (!fichero.is_open()) {
         return false;
     }
-    // Inicializar variables temporales
-    string linea;
-    string edad;
-    string genero;
-    // Leer línea por línea del archivo
-    while (getline(fichero, linea)) {
-        // Dividir la línea en los diferentes campos
-        stringstream lineaSS(linea);
-        getline(lineaSS, edad, ',');
-        getline(lineaSS, genero, ',');
-        // Convertir los valores a los tipos de datos adecuados
-        int edadInt = stoi(edad);
-        char generoChar = genero[0];
-        // Incrementar el contador adecuado en la matriz de estadísticas
-        unsigned indice = indiceRangoEdad(edad);
-    if (indice < NUM_EDADES) {
-        if (generoChar == 'M') {
-        estadisticas[indice][0]++;
-        }   
-        else {
-        estadisticas[indice][1]++;
+
+    string S;
+    getline(fichero, S); // ignorar la cabezera.
+    while (getline(fichero, S)) {
+        Estadistica estadistica;
+        leerEstadistica(S, estadistica);
+        auto idx = indiceRangoEdad(estadistica.rango_edad);
+        switch (estadistica.genero) {
+        case 'M':
+            estadisticas[idx][0]++;
+        case 'F':
+            estadisticas[idx][1]++;
         }
     }
+
+    return true;
 }
 
 /*
@@ -69,15 +81,15 @@ unsigned indiceRangoEdad(const string rangoEdad) ) {
  * Post: Devuelve, dependiendo del valor del parámetro «rangoEdad»
  *       ("<=25", "26-35", "36-50", "51-65" o ">65"), respectivamente, 0, 1, 2, 3 o 4.
  */
-
-unsigned indiceRangoEdad(const string rangoEdad){
+unsigned indiceRangoEdad(const string rangoEdad) {
     for (unsigned i = 0; i < NUM_EDADES; i++) {
         if (rangoEdad == RANGO_EDADES[i]) {
             return i;
         }
     }
-    return NUM_EDADES;
+    return 0;
 }    
+
 /*
  * Pre:  ---
  * Post: Si el valor del parámetro «genero» es uno de los valores válidos según la regla 
