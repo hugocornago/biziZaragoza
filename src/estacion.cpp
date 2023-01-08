@@ -7,15 +7,12 @@
  * Codificación de caracteres original de este fichero: UTF-8 con BOM
 \*********************************************************************************************/
 
-#pragma once
 #include "estacion.hpp"
 #include <iostream>
 #include <istream>
 #include <string>
 #include <fstream>
 using namespace std;
-
-const int NUM_ESTACIONES = 130;
 
 
 /*
