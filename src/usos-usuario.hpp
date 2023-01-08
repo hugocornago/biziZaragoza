@@ -8,6 +8,8 @@
 
 #pragma once 
 
+#include <functional>
+#include <ios>
 #include <string>
 using namespace std;
 
