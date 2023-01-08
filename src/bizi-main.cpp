@@ -33,6 +33,7 @@ string selectorDeFichero() {
     cout << "Introduzca una opción: ";
 
     string opcion;
+    // getline(cin, opcion);
     cin >> opcion;
 
     /* Ruta relavtiva */
@@ -82,7 +83,23 @@ void imprimirEstadisticas(unsigned estadistica[][NUM_GENEROS])
  */
 void imprimirUsuarios(UsosUsuario usuarios[], const unsigned numUsuarios) 
 {
-    std::cout << "Número usuarios distintos: " << numUsuarios << std::endl;
+    cout << "Número usuarios distintos: " << numUsuarios << endl << endl;
+
+    /* cabezera */
+    cout << right << setw(10) << "Usuario "
+         << right << setw(9) << "Traslados "
+         << right << setw(10) << "Circular "
+         << right << setw(9) << "Total" << endl;
+    cout << "========= ========= ========= =========" << endl;
+
+    for (unsigned i = 0; i < numUsuarios; ++i) {
+        const auto& usuario = usuarios[i];
+        cout << right << setw(9) << usuario.identificador
+             << right << setw(10) << usuario.usosTransporte
+             << right << setw(10) << usuario.usosCirculares
+             << right << setw(10) << numUsosTotales(usuario)
+             << endl;
+    }
 }
 /* Pre: <fichero> debe estar incializado y su componente <f> debe apuntar a un
  *      fichero abierto con permisos de lectura.
@@ -136,14 +153,17 @@ bool ordenUsuario(const string& nombreFichero, const string& usuarioABuscar) {
  * Post: Ejecuta la orden "MAYORES".
  */
 bool ordenMayores(const string& nombreFichero, std::string args) {
-    unsigned liston = stoi(args);
+    unsigned numeroDeUsuariosAMostrar = stoi(args);
     unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(NOMBRE_FICHERO_USUARIOS);
     UsosUsuario usuarios[numUsuariosMAX];
 
     unsigned numUsuarios;
     obtenerUsosPorUsuario(nombreFichero, usuarios, numUsuarios);
-    ordenar(usuarios, numUsuarios, liston);
-    imprimirUsuarios(usuarios, numUsuarios);
+    if (numeroDeUsuariosAMostrar > numUsuarios) {
+        numeroDeUsuariosAMostrar = numUsuarios;
+    }
+    ordenar(usuarios, numUsuarios, numeroDeUsuariosAMostrar);
+    imprimirUsuarios(usuarios, numeroDeUsuariosAMostrar);
     return true;
 }
 /* Pre: ---
@@ -234,6 +254,7 @@ bool elejirOrden(string& nombreFichero) {
     cout << endl;
     cout << "Orden: ";
     string orden;
+    // getline(cin, orden);
     cin >> orden;
 
     /* Con el fin de optimizar el programa, hemos optado por la funcion std::transform

@@ -87,11 +87,13 @@ unsigned indiceRangoEdad(const string rangoEdad) {
  */
 unsigned obtenerNumeroDeUsuarios(const string& nombreFicheroUsuarios) {
     ifstream fichero {nombreFicheroUsuarios};
+
     /* ignorar la cabezera */
     string linea;
     getline(fichero, linea);
 
     unsigned numeroDeUsuarios {0};
+
     Usuario usuario;
     while (leerUsuario(fichero, usuario)) {
         numeroDeUsuarios++;

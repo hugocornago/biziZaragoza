@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iostream>
 using namespace std;
 
 /*
@@ -52,20 +53,15 @@ bool obtenerUsosPorUsuario(const string nombreFicheroUsos,
 
         UsoBizi uso;
         while (leerUso(ficheroUsos, uso)) {
-            /* Añadir el usuario si no existe */
-            for (unsigned i = 0; ; ++i) {
+            for (unsigned i = 0; i < numUsuarios+1; ++i) {
+                cout << i << endl;
                 auto& usuario = usuarios[i];
-
-                /* Si no existe ya un usuario en el indice <i> */
                 if (usuario.identificador == -1) {
+                    /* Si aun no hay un usuario definido en esta posición, lo añadimos */
                     usuario.identificador = uso.identificador;
                     numUsuarios++;
-                    break;
                 }
-            }
 
-            for (unsigned i = 0; i < numUsuarios; ++i) {
-                auto& usuario = usuarios[i];
                 if (uso.identificador == usuario.identificador) {
                     if (uso.estacionRetira == uso.estacionDevuelve) {
                         usuario.usosCirculares++;
@@ -73,6 +69,7 @@ bool obtenerUsosPorUsuario(const string nombreFicheroUsos,
                     else {
                         usuario.usosTransporte++;
                     }
+                    break;
                 }
             }
         }
@@ -92,17 +89,32 @@ bool obtenerUsosPorUsuario(const string nombreFicheroUsos,
 void ordenar(UsosUsuario usuarios[], const unsigned numUsuarios, 
              const unsigned numOrdenar)
 {
-    /* array donde se va a guardar los usuarios ordenados */
-    UsosUsuario usuariosOrdenados[numUsuarios];
-
-    unsigned contadorOrdenados {0};
+    
+    /* crear una copia de usuarios */
+    UsosUsuario usuariosCopia[numUsuarios];
     for (unsigned i = 0; i < numUsuarios; ++i) {
-        auto usuario = usuarios[i];
-        if (numUsosTotales(usuario) >= numOrdenar) {
-            usuariosOrdenados[contadorOrdenados] = usuario;
-        }
+        usuariosCopia[i] = usuarios[i];
     }
 
-    /* reemplazar los usuarios ordenados con el parametro <usuarios> */
-    usuarios = usuariosOrdenados;
+    for (unsigned i = 0; i < numOrdenar; ++i) {
+        unsigned mayorPosicion = 0;
+        unsigned mayorTransportes = 0;
+        for (unsigned j = 0; j < numUsuarios; ++j) {
+            auto& usuario = usuariosCopia[j];
+            const auto& usosTotales = numUsosTotales(usuario);
+            if (usosTotales > mayorTransportes) {
+                mayorTransportes = usosTotales;
+                mayorPosicion = j;
+            }
+        }
+
+        /* asegurarnos de hacer una copia del usuario */
+        auto mayorUsuario = usuariosCopia[mayorPosicion];
+        /* guardarla en una nueva array */
+        usuarios[i] = mayorUsuario;
+
+        /* eliminar el usuario con la mayor posicion de usuarios */
+        usuariosCopia[mayorPosicion].usosTransporte = 0;
+        usuariosCopia[mayorPosicion].usosCirculares = 0;
+    }
 }
