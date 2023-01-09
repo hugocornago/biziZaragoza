@@ -54,7 +54,6 @@ bool obtenerUsosPorUsuario(const string nombreFicheroUsos,
         UsoBizi uso;
         while (leerUso(ficheroUsos, uso)) {
             for (unsigned i = 0; i < numUsuarios+1; ++i) {
-                cout << i << endl;
                 auto& usuario = usuarios[i];
                 if (usuario.identificador == -1) {
                     /* Si aun no hay un usuario definido en esta posición, lo añadimos */
