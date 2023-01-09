@@ -39,10 +39,9 @@ string selectorDeFichero() {
     // getline(cin, opcion);
     cin >> opcion;
 
-    /* Ruta relavtiva */
-    string ruta_fichero = "datos/usos-" + opcion + ".csv";
-
-    return ruta_fichero;
+    /* Ruta relativa */
+    string construirNombreFicheroUsos(opcion);
+    return construirNombreFicheroUsos;
 }
 
 /* Pre: ---

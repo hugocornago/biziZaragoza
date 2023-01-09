@@ -1,6 +1,6 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
- * Autores: ¡¡¡PONED AQUÍ VUESTROS NOMBRES!!!
+ * Autores: Hugo Cornago y Jaime Alonso
  * Ultima revisión: ¡¡¡!!!
  * Resumen: Fichero de interfaz «nombres-ficheros.hpp» de un módulo que contiene constantes con
  *          los nombres o partes de nombres de los ficheros que se van a utilizar y un
