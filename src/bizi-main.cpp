@@ -20,8 +20,6 @@
 #include "uso.hpp"
 using namespace std;
 
-const string NOMBRE_FICHERO_USUARIOS {"datos/usuarios.csv"};
-
 /* Pre: ---
  * Post: Imprime al usuario una lista de los posibles fichero que 
  *       estan disponibles para el programa y pregunta cual quiere elegir.
@@ -36,7 +34,6 @@ string selectorDeFichero() {
     cout << "Introduzca una opción: ";
 
     string opcion;
-    // getline(cin, opcion);
     cin >> opcion;
 
     /* Ruta relativa */
@@ -124,7 +121,7 @@ bool ordenEstadisticas()
 {
     /* Inicializar estadisticas a 0 */
     unsigned estadisticas[NUM_EDADES][NUM_GENEROS] = {};
-    if (!obtenerEstadisticas(NOMBRE_FICHERO_USUARIOS, estadisticas)) return false;
+    if (!obtenerEstadisticas(FICHERO_USUARIOS, estadisticas)) return false;
     imprimirEstadisticas(estadisticas);
     return true;
 }
@@ -134,7 +131,7 @@ bool ordenEstadisticas()
 bool ordenUsuario(const string& usuarioABuscar) {
     string genero, rangoEdad;
     unsigned IDUsuario = stoi(usuarioABuscar);
-    if (buscarUsuario(NOMBRE_FICHERO_USUARIOS, IDUsuario, genero, rangoEdad)) {
+    if (buscarUsuario(FICHERO_USUARIOS, IDUsuario, genero, rangoEdad)) {
         if (genero == "M") {
             cout << "El usuario " << IDUsuario << " está en el rango de edad \""
                  << rangoEdad << "\"." << endl;
@@ -147,7 +144,7 @@ bool ordenUsuario(const string& usuarioABuscar) {
         }
     } else {
         cout << "El/la usuario/a " << IDUsuario << " no aparece en el fichero \""
-             << NOMBRE_FICHERO_USUARIOS << "\"." << endl;
+             << FICHERO_USUARIOS << "\"." << endl;
     }
     return true;
 }
@@ -156,7 +153,7 @@ bool ordenUsuario(const string& usuarioABuscar) {
  */
 bool ordenMayores(const string& nombreFichero, std::string args) {
     unsigned numeroDeUsuariosAMostrar = stoi(args);
-    unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(NOMBRE_FICHERO_USUARIOS);
+    unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(FICHERO_USUARIOS);
     UsosUsuario usuarios[numUsuariosMAX];
 
     unsigned numUsuarios;
