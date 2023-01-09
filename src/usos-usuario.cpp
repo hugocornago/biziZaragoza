@@ -28,7 +28,7 @@ unsigned numUsosTotales(const UsosUsuario usuario)
 }
 
 
-/*DESTINOS
+/*
  * Pre:  «nombreFicheroUsos» contiene la ruta y nombre de un fichero de texto con información
  *       sobre usos del sistema Bizi Zaragoza y con el formato establecido en el enunciado.
  *       El vector «usuarios» tiene al menos tantas componentes como número de usuarios
