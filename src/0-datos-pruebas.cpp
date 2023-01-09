@@ -47,12 +47,25 @@ bool escribirFichero (string nombreFichero, string vector_lineas[], unsigned lon
 
 int main() {
     const string ficheroOriginal {"datos/usos-16.csv"};
-    const string ficheroDestino {"datos/usos-t1.csv"};
-    const unsigned numeroDeLineasALeer = 10;
+    string ficheroDestino {"datos/usos-t1.csv"};
+    unsigned numeroDeLineasALeer = 10;
     string lineas[numeroDeLineasALeer];
     if (leerNLineas(ficheroOriginal, lineas, numeroDeLineasALeer)) {
         if (escribirFichero(ficheroDestino, lineas, numeroDeLineasALeer)) {
-            cout << "Se ha escrito correctamente." << endl;
+            cout << "Se ha escrito correctamente el primer fichero." << endl;
+        } else {
+            return 1;
+        }
+    } else {
+        return 2;
+    }
+
+    ficheroDestino = "datos/usos-t2.csv";
+    numeroDeLineasALeer = 2000;
+    string lineas2[numeroDeLineasALeer];
+    if (leerNLineas(ficheroOriginal, lineas2, numeroDeLineasALeer)) {
+        if (escribirFichero(ficheroDestino, lineas2, numeroDeLineasALeer)) {
+            cout << "Se ha escrito correctamente el segundo fichero." << endl;
         } else {
             return 1;
         }
