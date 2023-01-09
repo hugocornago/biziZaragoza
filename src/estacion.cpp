@@ -8,9 +8,12 @@
 \*********************************************************************************************/
 
 #include "estacion.hpp"
+#include "uso.hpp"
 #include <iostream>
 #include <istream>
+#include <sstream>
 #include <string>
+#include <iomanip>
 #include <fstream>
 using namespace std;
 
@@ -33,8 +36,8 @@ using namespace std;
  */
 bool leerEstaciones(const string nombreFicheroEstaciones, Estacion estaciones[]) {
     const int NUM_BARRAS = 7;
-    char DELIMITADOR = ';';
-    char BARRA = '/';
+    const char DELIMITADOR = ';';
+    const char BARRA = '/';
     // Abrimos el fichero de estaciones
     ifstream fichero {nombreFicheroEstaciones};
 
@@ -42,6 +45,7 @@ bool leerEstaciones(const string nombreFicheroEstaciones, Estacion estaciones[])
     if (!fichero.is_open()) {
         return false;
     }
+
     /* Ignorar la cabezera */
     string cabezera;
     getline(fichero, cabezera);
@@ -49,6 +53,7 @@ bool leerEstaciones(const string nombreFicheroEstaciones, Estacion estaciones[])
     for (unsigned i = 0; i<NUM_ESTACIONES; i++){
         for (unsigned n = 0; n<=NUM_BARRAS; n++){
             string estacion;
+
             if(n<7){
                 getline(fichero, estacion, BARRA);
             }
@@ -57,7 +62,15 @@ bool leerEstaciones(const string nombreFicheroEstaciones, Estacion estaciones[])
                 estaciones[i].identificador = stoi(estacion);
             }
         }
+        /* Lectura del nombre */
+        string componente;
+        getline(fichero, componente, DELIMITADOR); // ignorar el componente "about"
 
+        getline(fichero, componente, DELIMITADOR); // componente "title"
+        // guardar todo menos la primera y ultima "
+        estaciones[i].nombre = componente.substr(1, componente.size()-2); 
+
+        getline(fichero, componente); // Obtener el resto de la linea.
     }
     return true;
 
@@ -82,7 +95,30 @@ bool leerEstaciones(const string nombreFicheroEstaciones, Estacion estaciones[])
  *       devolver «false».
  */
 bool contarUsosEstaciones(const string nombreFicheroUsos, Estacion estaciones[]) {
+    ifstream fichero {nombreFicheroUsos};
+    if (fichero.is_open()) {
+        string linea;
+        
+        // ignorar la cabezera
+        getline(fichero, linea);
 
+        UsoBizi uso;
+        while (leerUso(fichero, uso)) {
+            for (unsigned i = 0; i < NUM_ESTACIONES; ++i) {
+                auto& estacion = estaciones[i];
+                if (estacion.identificador == uso.estacionRetira) {
+                    estacion.numeroUsos++;
+                }
+                if (estacion.identificador == uso.estacionDevuelve) {
+                    estacion.numeroUsos++;
+                }
+            }
+        }
+        
+        fichero.close();
+        return true;
+    }
+    return false;
 }
 
 
@@ -98,13 +134,13 @@ void ordenarPorUso(Estacion estaciones[]) {
         int minIdx = i;
         for (int j = i + 1; j < NUM_ESTACIONES; j++) {
             if (estaciones[j].numeroUsos > estaciones[minIdx].numeroUsos) {
-            minIdx = j;
+                minIdx = j;
             }
         }
-    // Intercambiamos las estaciones en las posiciones i y minIdx
-    Estacion temp = estaciones[i];
-    estaciones[i] = estaciones[minIdx];
-    estaciones[minIdx] = temp;
+        // Intercambiamos las estaciones en las posiciones i y minIdx
+        Estacion temp = estaciones[i];
+        estaciones[i] = estaciones[minIdx];
+        estaciones[minIdx] = temp;
     }
 }
 
@@ -124,7 +160,32 @@ void ordenarPorUso(Estacion estaciones[]) {
  *                3   40251  47 Plaza San Francisco - Universidad
  *           ...
  */
-bool escribirInformeEstaciones(const string nombreFichero, const Estacion estaciones[]);
+bool escribirInformeEstaciones(const string nombreFichero, const Estacion estaciones[])
+{
+    ofstream fichero {nombreFichero};
+    if (fichero.is_open()) {
+        /* Cabezera */
+        fichero << right << setw(6) << "Puesto"
+               << right << setw(8) << "Usos"
+               << right << setw(4) << "Id" << " "
+               << left << setw(50) << "Nombre"
+               << endl;
+        fichero << "------ ------- --- --------------------------------------------------"
+               << endl;
+
+        for (int i = 0; i < NUM_ESTACIONES; ++i) {
+            auto& estacion = estaciones[i];
+            fichero << right << setw(6) << i+1
+                   << right << setw(8) << estacion.numeroUsos
+                   << right << setw(4) << estacion.identificador << " "
+                   << left << setw(50) << estacion.nombre
+                   << endl;
+        }
+        fichero.close();
+        return true;
+    }
+    return false;
+}
 
 
 /*
