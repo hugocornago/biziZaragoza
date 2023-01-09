@@ -5,8 +5,10 @@
  * Resumen: Fichero de implementación del módulo principal que implementa el trabajo
  *          obligatorio de Programación 1 del curso 2022-23.
 \*********************************************************************************************/
+#include "estacion.hpp"
 #include "usuarios.hpp"
 #include "usos-usuario.hpp"
+#include "nombres-ficheros.hpp"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -169,8 +171,27 @@ bool ordenMayores(const string& nombreFichero, std::string args) {
 /* Pre: ---
  * Post: Ejecuta la orden "INFORME".
  */
-bool ordenInforme(const string& nombreFichero, std::string args) {
-    throw logic_error("Función aun no implementada!");
+bool ordenInforme(const string& nombreFichero, std::string nombreFicheroAEscribir) {
+    Estacion estaciones[NUM_ESTACIONES];
+    if (!leerEstaciones(FICHERO_ESTACIONES, estaciones)) {
+        cerr << "No se ha podido leer las estaciones de \"" << FICHERO_ESTACIONES
+             << "\"." << endl; 
+        return false;
+    };
+    if (!contarUsosEstaciones(nombreFichero, estaciones)) {
+        cerr << "No se ha podido leer los usos del fichero \"" << nombreFichero
+             << "\"." << endl; 
+        return false;
+    };
+
+    ordenarPorUso(estaciones);
+
+    if (!escribirInformeEstaciones(nombreFicheroAEscribir, estaciones)) {
+        cerr << "No se ha podido escribir el informe en la ruta \"" << nombreFicheroAEscribir
+             << "\"." << endl; 
+        return false;
+    };
+    return true;
 }
 /* Pre: ---
  * Post: Ejecuta la orden "DESTINOS".
