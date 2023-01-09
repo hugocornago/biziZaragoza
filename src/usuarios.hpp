@@ -1,7 +1,7 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
  * Autores: Jaime Alonso y Hugo Cornago
- * Ultima revisión: ¡¡¡!!!
+ * Ultima revisión: 10-01-2023
  * Resumen: Fichero de interfaz «usuarios.hpp» de un módulo para trabajar con el fichero de 
  *          usuarios del sistema Bizi Zaragoza.
 \*********************************************************************************************/
@@ -25,8 +25,12 @@ struct Usuario {
     string rangoEdad;
 };
 
-/* */
-bool leerUsuario();
+/*
+ * Pre: <fichero> debe ser un flujo abierto que siga la sintaxis de un fichero usuarios (sin cabezera)
+ * Post: Devuelve true is ha podido una linea del flujo y guarda en <usuario> los datos del siguiente
+ *       usuario en el flujo.
+ */
+bool leerUsuario(ifstream& fichero, Usuario& usuario);
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 

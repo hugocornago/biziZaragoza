@@ -1,7 +1,7 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
  * Autores: Jaime Alonso y Hugo Cornago
- * Ultima revisión: 
+ * Ultima revisión: 10-01-2023
  * Resumen: Fichero que genera tests aleatorios más pequeños para facilitar
  *          la creacion del programa principal.
 \*********************************************************************************************/

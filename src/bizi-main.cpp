@@ -1,7 +1,7 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
  * Autores: Jaime Alonso y Hugo Cornago
- * Ultima revisión: ¡¡¡!!!
+ * Ultima revisión: 10-01-2023
  * Resumen: Fichero de implementación del módulo principal que implementa el trabajo
  *          obligatorio de Programación 1 del curso 2022-23.
 \*********************************************************************************************/

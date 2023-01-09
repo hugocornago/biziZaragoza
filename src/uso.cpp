@@ -1,34 +1,18 @@
-﻿#include "uso.hpp"
+﻿/*********************************************************************************************\
+ * Programación 1. Trabajo obligatorio
+ * Autores: Hugo Cornago y Jaime Alonso
+ * Ultima revisión: 10-01-2023
+ * Resumen: Fichero de interfaz «usos.hpp» de un módulo para trabajar con
+ *          registros que representan usos del sistema Bizi Zaragoza.
+\*********************************************************************************************/
+
+#include "uso.hpp"
 #include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
 
 using namespace std;
-
-/* Pre: <fichero> debe estar incializado y su componente <f> debe apuntar a un
- *      fichero abierto con permisos de lectura.
- * Post: Devuelve "true" si ha podido obtener el numero de usos de ...
- *       En cualquier otro caso, devuelve "false".
- */
-// bool ordenUsos(ifstream& fichero) {
-//     string numTraslados;   
-//     string numCirculares;
-//     int numTotalUsos;
-//     if (!fichero_abierto.is_open()){
-//         string cabecera;
-//         getline(fichero_abierto, cabecera);
-//         string uso;
-//         while (getline(fichero_abierto, uso)){
-//             // TODO
-//             // numTotalUsos++;
-//             // if(getline(fichero_abierto, numTraslados))
-//             break;
-//         }
-//      }
-//      
-//     return true;
-// }
 
 /* Pre: ---
  * Post: Imprime en pantalla información sobre los usos del fichero
@@ -120,9 +104,3 @@ bool contarUsos(const string nombreFicheroUsos, unsigned& traslados, unsigned& u
     fichero.close();
     return true;
 }
-
-    
-
-
-
-

@@ -1,7 +1,7 @@
 ﻿/*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
- * Autores: ¡¡¡PONED AQUÍ VUESTROS NOMBRES!!!
- * Ultima revisión: ¡¡¡!!!
+ * Autores: Hugo Cornago y Jaime Alonso
+ * Ultima revisión: 10-01-2023
  * Resumen: Fichero de interfaz «estacion.hpp» de un módulo para trabajar con
  *          registros que representan estaciones del sistema Bizi Zaragoza.
  * Codificación de caracteres original de este fichero: UTF-8 con BOM
