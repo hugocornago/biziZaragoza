@@ -173,20 +173,20 @@ bool escribirInformeEstaciones(const string nombreFichero, const Estacion estaci
     if (fichero.is_open()) {
         /* Cabezera */
         fichero << right << setw(6) << "Puesto"
-               << right << setw(8) << "Usos"
-               << right << setw(4) << "Id" << " "
-               << left << setw(50) << "Nombre"
-               << endl;
+                << right << setw(8) << "Usos"
+                << right << setw(4) << "Id" << " "
+                << left << setw(50) << "Nombre"
+                << endl;
         fichero << "------ ------- --- --------------------------------------------------"
-               << endl;
+                << endl;
 
         for (int i = 0; i < NUM_ESTACIONES; ++i) {
             auto& estacion = estaciones[i];
             fichero << right << setw(6) << i+1
-                   << right << setw(8) << estacion.numeroUsos
-                   << right << setw(4) << estacion.identificador << " "
-                   << left << setw(50) << estacion.nombre
-                   << endl;
+                    << right << setw(8) << estacion.numeroUsos
+                    << right << setw(4) << estacion.identificador << " "
+                    << left << setw(50) << estacion.nombre
+                    << endl;
         }
         fichero.close();
         return true;

@@ -192,6 +192,7 @@ bool ordenInforme(const string& nombreFichero, std::string nombreFicheroAEscribi
              << "\"." << endl; 
         return false;
     };
+    cout << "Informe \"" << nombreFicheroAEscribir << "\" creado correctamente." << endl;
     return true;
 }
 
@@ -212,7 +213,6 @@ bool ordenDestinos(const string& nombreFichero, const string& nombreFicheroAEscr
             cerr << "No se ha podido escribir en el fichero \"" << nombreFicheroAEscribir
                  << "\"." << endl; 
             return false;
-
         }
     }
 
@@ -289,7 +289,10 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
         string nombreFicheroAEscribir;
         cout << "Escriba el nombre del fichero del informe" << endl
              << "(presione solo ENTRAR para escribirlo en la pantalla): ";
+
+        /* ignorar el salto de linea */
         cin.ignore();
+
         getline(cin, nombreFicheroAEscribir);
         ordenDestinos(nombreFichero, nombreFicheroAEscribir);
     } else if (orden == "FIN") {
