@@ -86,6 +86,7 @@ bool obtenerUsosPorUsuario(const string nombreFicheroUsos,
             else {
                 usuario.usosTransporte++;
             }
+            
             usuariosSet.insert(usuario);
         }
 
