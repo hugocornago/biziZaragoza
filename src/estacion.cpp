@@ -110,14 +110,15 @@ bool contarUsosEstaciones(const string nombreFicheroUsos, Estacion estaciones[])
 
         UsoBizi uso;
         while (leerUso(fichero, uso)) {
-            for (unsigned i = 0; i < NUM_ESTACIONES; ++i) {
-                auto& estacion = estaciones[i];
-                if (estacion.identificador == uso.estacionRetira) {
-                    estacion.numeroUsos++;
-                }
-                if (estacion.identificador == uso.estacionDevuelve) {
-                    estacion.numeroUsos++;
-                }
+            /* 
+             * Por alguna razon, hay usos en el fichero Usos que contienen estaciones inexistentes.
+             * Para remediar eso, simplemente nos saltamos el uso si no existe la estacion.
+             */
+            if (uso.estacionRetira <= NUM_ESTACIONES) {
+                estaciones[uso.estacionRetira-1].numeroUsos++;
+            }
+            if (uso.estacionDevuelve <= NUM_ESTACIONES) {
+                estaciones[uso.estacionDevuelve-1].numeroUsos++;
             }
         }
         
