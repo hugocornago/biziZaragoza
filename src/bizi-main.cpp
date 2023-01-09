@@ -12,6 +12,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -120,7 +121,7 @@ bool ordenUsos(const string& nombreFichero) {
 /* Pre: ---
  * Post: Ejecuta la orden "ESTADISTICAS".
  */
-bool ordenEstadisticas(const string& nombreFichero)
+bool ordenEstadisticas()
 {
     /* Inicializar estadisticas a 0 */
     unsigned estadisticas[NUM_EDADES][NUM_GENEROS] = {};
@@ -131,7 +132,7 @@ bool ordenEstadisticas(const string& nombreFichero)
 /* Pre: ---
  * Post: Ejecuta la orden "USUARIO".
  */
-bool ordenUsuario(const string& nombreFichero, const string& usuarioABuscar) {
+bool ordenUsuario(const string& usuarioABuscar) {
     string genero, rangoEdad;
     unsigned IDUsuario = stoi(usuarioABuscar);
     if (buscarUsuario(NOMBRE_FICHERO_USUARIOS, IDUsuario, genero, rangoEdad)) {
@@ -193,11 +194,44 @@ bool ordenInforme(const string& nombreFichero, std::string nombreFicheroAEscribi
     };
     return true;
 }
+
 /* Pre: ---
  * Post: Ejecuta la orden "DESTINOS".
  */
-bool ordenDestinos(const string& nombreFichero, std::string args) {
-    throw logic_error("Función aun no implementada!");
+bool ordenDestinos(const string& nombreFichero, const string& nombreFicheroAEscribir) {
+    ostream* flujo;
+    bool escribirEnPantalla = nombreFicheroAEscribir.empty();
+    
+    if (escribirEnPantalla) {
+        /* Escribirlo en pantalla */
+        flujo = &cout;
+    } else {
+        /* Escribrilo en un fichero */
+        flujo = new ofstream(nombreFicheroAEscribir);
+        if (flujo->bad()) {
+            cerr << "No se ha podido escribir en el fichero \"" << nombreFicheroAEscribir
+                 << "\"." << endl; 
+            return false;
+
+        }
+    }
+
+    unsigned viajes[NUM_ESTACIONES][NUM_ESTACIONES] = {};
+    if (!contarViajesOrigenDestino(nombreFichero, viajes)) {
+        cerr << "No se ha podido leer el fichero \"" << nombreFichero
+             << "\"." << endl; 
+        return false;
+    }
+
+    unsigned destinosMasFrecuentes[NUM_ESTACIONES];
+    calcularDestinosMasFrecuentes(viajes, destinosMasFrecuentes);
+
+    escribirInformeDestinos(*flujo, viajes, destinosMasFrecuentes);
+
+    if (!escribirEnPantalla) {
+        cout << "Informe \"" << nombreFicheroAEscribir << "\" creado correctamente." << endl;
+    }
+    return true;
 }
 
 /* Pre: ---
@@ -236,13 +270,13 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
     } else if (orden == "USOS") {
         ordenUsos(nombreFichero);
     } else if (orden == "ESTADISTICAS") {
-        if(!ordenEstadisticas(nombreFichero)) {
-            cerr << "ERROR";
+        if(!ordenEstadisticas()) {
+            cerr << "No se ha podido leer el fichero usuarios \"" << FICHERO_USUARIOS << "\"."  << endl;
         };
     } else if (orden == "USUARIO") {
         string usuario;
         cin >> usuario;
-        ordenUsuario(nombreFichero, usuario);
+        ordenUsuario(usuario);
     } else if (orden == "MAYORES") {
         string args;
         cin >> args;
@@ -252,9 +286,12 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
         cin >> args;
         ordenInforme(nombreFichero, args);
     } else if (orden == "DESTINOS") {
-        string args;
-        cin >> args;
-        ordenDestinos(nombreFichero, args);
+        string nombreFicheroAEscribir;
+        cout << "Escriba el nombre del fichero del informe" << endl
+             << "(presione solo ENTRAR para escribirlo en la pantalla): ";
+        cin.ignore();
+        getline(cin, nombreFicheroAEscribir);
+        ordenDestinos(nombreFichero, nombreFicheroAEscribir);
     } else if (orden == "FIN") {
         return true;
     } else {
@@ -275,7 +312,6 @@ bool elejirOrden(string& nombreFichero) {
     cout << endl;
     cout << "Orden: ";
     string orden;
-    // getline(cin, orden);
     cin >> orden;
 
     /* Con el fin de optimizar el programa, hemos optado por la funcion std::transform

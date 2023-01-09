@@ -8,6 +8,7 @@
 \*********************************************************************************************/
 
 #include "estacion.hpp"
+#include "nombres-ficheros.hpp"
 #include "uso.hpp"
 #include <iostream>
 #include <istream>
@@ -51,24 +52,29 @@ bool leerEstaciones(const string nombreFicheroEstaciones, Estacion estaciones[])
     getline(fichero, cabezera);
 
     for (unsigned i = 0; i<NUM_ESTACIONES; i++){
+        unsigned identificador;
         for (unsigned n = 0; n<=NUM_BARRAS; n++){
-            string estacion;
+            string url;
 
             if(n<7){
-                getline(fichero, estacion, BARRA);
+                getline(fichero, url, BARRA);
             }
             else{
-                getline(fichero, estacion, DELIMITADOR);
-                estaciones[i].identificador = stoi(estacion);
+                getline(fichero, url, DELIMITADOR);
+                identificador = stoi(url);
             }
         }
+
+        auto& estacion = estaciones[identificador-1];
+        estacion.identificador = identificador;
+
         /* Lectura del nombre */
         string componente;
         getline(fichero, componente, DELIMITADOR); // ignorar el componente "about"
 
         getline(fichero, componente, DELIMITADOR); // componente "title"
         // guardar todo menos la primera y ultima "
-        estaciones[i].nombre = componente.substr(1, componente.size()-2); 
+        estacion.nombre = componente.substr(1, componente.size()-2); 
 
         getline(fichero, componente); // Obtener el resto de la linea.
     }
@@ -199,7 +205,31 @@ bool escribirInformeEstaciones(const string nombreFichero, const Estacion estaci
  *       código «j» + 1. En caso contrario, se limita a devolver «false».
  */
 bool contarViajesOrigenDestino(const string nombreFicheroUsos, 
-                               unsigned viajes[][NUM_ESTACIONES]);
+                               unsigned viajes[][NUM_ESTACIONES])
+{
+    ifstream fichero {nombreFicheroUsos};
+    if (fichero.is_open()) {
+        /* ignorar cabezera */
+        string ignorar;
+        getline(fichero, ignorar);
+
+        UsoBizi uso;
+        while (leerUso(fichero, uso)) {
+            if (uso.estacionRetira > NUM_ESTACIONES || uso.estacionDevuelve > NUM_ESTACIONES) {
+                /* 
+                 * Por alguna razon, hay usos en el fichero Usos que contienen estaciones inexistentes.
+                 * Para remediar eso, simplemente nos saltamos el uso si no existe la estacion.
+                 */
+                continue;
+            }
+            viajes[uso.estacionRetira-1][uso.estacionDevuelve-1]++;
+        }
+
+        return true;
+    }
+
+    return false;
+}
 
 
 /*
@@ -215,7 +245,22 @@ bool contarViajesOrigenDestino(const string nombreFicheroUsos,
  *       viajes[1][NUM_ESTACIONES-1] y así sucesivamente.
  */
 void calcularDestinosMasFrecuentes(const unsigned viajes[][NUM_ESTACIONES],
-                                   unsigned destinosMasFrecuentes[]);
+                                   unsigned destinosMasFrecuentes[])
+{
+    for (unsigned i = 0; i < NUM_ESTACIONES; ++i) {
+        auto& destino = destinosMasFrecuentes[i];
+
+        unsigned mayor {0};
+        for (unsigned j = 0; j < NUM_ESTACIONES; ++j) {
+            const auto& viaje = viajes[i][j];
+            if (viaje > mayor) {
+                mayor = viaje;
+                destino = j;
+            }
+        }
+
+    }
+}
 
 /*
  * Pre:  El flujo de escritura «f» ya está asociado con un dispositivo (ya sea fichero o
@@ -231,4 +276,26 @@ void calcularDestinosMasFrecuentes(const unsigned viajes[][NUM_ESTACIONES],
  *       el formato establecido en el enunciado.
  */
 void escribirInformeDestinos(ostream& f, const unsigned viajes[][NUM_ESTACIONES], 
-                             const unsigned destinosMasFrecuentes[]);
+                             const unsigned destinosMasFrecuentes[])
+{
+    /* cabezera */
+    f << "Viajes  Origen --> Destino" << endl;
+    f << "----------------------------------------------------"
+      << "----------------------------------------------------" << endl;
+
+    Estacion estaciones[NUM_ESTACIONES];
+    leerEstaciones(FICHERO_ESTACIONES, estaciones);
+
+    for (unsigned i = 0; i < NUM_ESTACIONES; ++i) {
+        const auto& estacion = estaciones[i];
+        const auto& destinoMasFrecuente = destinosMasFrecuentes[i];
+        const auto& numViajes = viajes[i][destinoMasFrecuente];
+        const auto& estacionDestinoMasFrecuente = estaciones[destinoMasFrecuente];
+
+        f << " " << left << setw(6) << numViajes << " "
+          << i+1 << "-" << estacion.nombre << "  -->  "
+          << estacionDestinoMasFrecuente.identificador << "-" 
+          << estacionDestinoMasFrecuente.nombre
+          << endl;
+    }
+}
