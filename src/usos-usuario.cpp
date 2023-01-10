@@ -9,9 +9,13 @@
 #include "usos-usuario.hpp"
 #include "uso.hpp"
 #include <fstream>
+#include <functional>
+#include <ios>
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <set>
+#include <unordered_set>
 using namespace std;
 
 /*
@@ -44,33 +48,53 @@ bool obtenerUsosPorUsuario(const string nombreFicheroUsos,
     ifstream ficheroUsos {nombreFicheroUsos};
     if (ficheroUsos.is_open()) {
         string linea;
-
         // ignorar cabezera
         getline(ficheroUsos, linea); 
 
-        // empezamos con 0 usuarios
-        numUsuarios = 0;
+        /* 
+         * Dado el gran numero de usuarios existentes en el servicio de BiziZaragoza,
+         * hemos optado por usar un hashset que contenga los usuarios que aparecen en el ficheroUsos.
+         * Para ello, usamos de hash el identificador hashedo.
+         * Y comprobamos que dos usuarios sean iguales, si tienen el mismo identificador.
+         * 
+         * Esta solución aporta una gran mejora de velocidad al programa (3 veces más rapido)
+         * a cambio de un poco de complejidad.
+         */
+        auto hash = [](const UsosUsuario& usuario) { return std::hash<unsigned>()(usuario.identificador); };
+        auto equal = [](const UsosUsuario& usuario1, const UsosUsuario& usuario2) {
+            return usuario1.identificador == usuario2.identificador;
+        };
+        unordered_set<UsosUsuario, decltype(hash), decltype(equal)> usuariosSet(1, hash, equal);
 
         UsoBizi uso;
         while (leerUso(ficheroUsos, uso)) {
-            for (unsigned i = 0; i < numUsuarios+1; ++i) {
-                auto& usuario = usuarios[i];
-                if (usuario.identificador == -1) {
-                    /* Si aun no hay un usuario definido en esta posición, lo añadimos */
-                    usuario.identificador = uso.identificador;
-                    numUsuarios++;
-                }
-
-                if (uso.identificador == usuario.identificador) {
-                    if (uso.estacionRetira == uso.estacionDevuelve) {
-                        usuario.usosCirculares++;
-                    }
-                    else {
-                        usuario.usosTransporte++;
-                    }
-                    break;
-                }
+            UsosUsuario usuario;
+            usuario.identificador = uso.identificador;
+            
+            /* Las siguientes lineas comprueban si el usuario ya existe en el hashset,
+             * y si es asi, utilizamos el usuario del set en vez del que acabamos de crear */
+            auto aux = usuariosSet.find(usuario);
+            bool usuarioExiste = aux != usuariosSet.end();
+            if (usuarioExiste) {
+                usuario = *aux;
+                usuariosSet.erase(*aux);
             }
+
+            if (uso.estacionRetira == uso.estacionDevuelve) {
+                usuario.usosCirculares++;
+            }
+            else {
+                usuario.usosTransporte++;
+            }
+            
+            usuariosSet.insert(usuario);
+        }
+
+        numUsuarios = usuariosSet.size();
+
+        unsigned i = 0;
+        for (auto& usuario : usuariosSet) {
+            usuarios[i++] = usuario;
         }
 
         ficheroUsos.close();
