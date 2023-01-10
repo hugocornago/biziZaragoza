@@ -260,6 +260,7 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
         cout << endl;
         imprimirFichero(FICHERO_AYUDA);
     } else if (orden == "FICHERO") {
+        cout << endl;
         /* mientras que no se haya podido leer correctamente un fichero
          * repetir la ordenFichero */
         while (!ordenFichero(nombreFichero));
