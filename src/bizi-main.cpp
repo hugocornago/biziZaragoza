@@ -242,29 +242,6 @@ bool ordenDestinos(const string& nombreFichero, const string& nombreFicheroAEscr
 }
 
 /* Pre: ---
- * Post: Imprime en pantalla las posibles ordenes que estan
- *       implementadas y puede usar el usuario.
- */
-void imprimirOrdenesDisponibles () {
-    cout << "ÓRDENES DISPONIBLES" << endl;
-    cout << "===================" << endl;
-    cout << "AYUDA: " << setw(9) << "Muestra esta pantalla de ayuda." << endl;
-    cout << "FICHERO: Permite modificar la selección del fichero de usos a utilizar." << endl;
-    cout << "USOS: " << setw(9) << "Escribe en la pantalla el número de usos de traslado y circulares." << endl;
-    cout << "ESTADISTICAS: " << setw(9) << "Informa la distribución por edades y géneros de los usuarios." << endl;
-    cout << "USUARIO <id-usuario>: Informa acerca del número de usos realizados por el"
-         << "usuario especificado." << endl;
-    cout << "MAYORES <n>: " << setw(9) << "Escribe en la pantalla el número de usuarios distintos y los"
-         << "<n> usuarios que más usos han hecho del sistema." << endl;
-    cout << "INFORME <nombre-fichero>: Escribe en el fichero especificado un informe con el" << endl;
-    cout << "número de usos de las estaciones, según el fichero seleccionado." << endl;
-    cout << "DESTINOS: <nombre-fichero>: " << setw(9) << "Escribe en el fichero especificado un informe en"
-         << "el que, para cada estación dada, se indica la estación a la que más."
-         << "se ha viajado desde ella." << endl;
-    cout << "FIN: " << setw(9) << "Termina la ejecución de este programa." << endl;
-}
-
-/* Pre: ---
  * Post: 
  *       Devuelve "true" si el usuario a dado la orden "FIN".
  *       Devuelve "false" en cualquier otro caso.
@@ -272,7 +249,6 @@ void imprimirOrdenesDisponibles () {
 bool ejecutarOrden(const string& orden, string& nombreFichero) {
     if (orden == "AYUDA") {
         imprimirFichero(FICHERO_AYUDA);
-        // imprimirOrdenesDisponibles();
     } else if (orden == "FICHERO") {
         while (!ordenFichero(nombreFichero));
     } else if (orden == "USOS") {
@@ -345,7 +321,7 @@ int main(){
     };
     cout << endl;
 
-    imprimirOrdenesDisponibles();
+    imprimirFichero(FICHERO_AYUDA);
     while (!elejirOrden(nombreFichero));
 
     std::cout << "Adios!" << std::endl;
