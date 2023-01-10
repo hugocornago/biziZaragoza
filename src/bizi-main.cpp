@@ -325,6 +325,5 @@ int main(){
     imprimirFichero(FICHERO_AYUDA);
     while (!elejirOrden(nombreFichero));
 
-    std::cout << "Adios!" << std::endl;
     return 0;
 }
