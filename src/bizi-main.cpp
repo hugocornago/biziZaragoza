@@ -90,9 +90,10 @@ void imprimirEstadisticas(unsigned estadistica[][NUM_GENEROS])
 /* Pre: ---
  * Post: Imprime en pantalla usuarios y sus usos.
  */
-void imprimirUsuarios(UsosUsuario usuarios[], const unsigned numUsuarios) 
+void imprimirUsuarios(UsosUsuario usuarios[], const unsigned numUsuariosAMostrar,
+                      const unsigned numUsuariosTotal)
 {
-    cout << "Número usuarios distintos: " << numUsuarios << endl << endl;
+    cout << "Número usuarios distintos: " << numUsuariosTotal << endl << endl;
 
     /* cabezera */
     cout << right << setw(10) << "Usuario "
@@ -101,7 +102,7 @@ void imprimirUsuarios(UsosUsuario usuarios[], const unsigned numUsuarios)
          << right << setw(9) << "Total" << endl;
     cout << "========= ========= ========= =========" << endl;
 
-    for (unsigned i = 0; i < numUsuarios; ++i) {
+    for (unsigned i = 0; i < numUsuariosAMostrar; ++i) {
         const auto& usuario = usuarios[i];
         cout << right << setw(9) << usuario.identificador
              << right << setw(10) << usuario.usosTransporte
@@ -172,7 +173,7 @@ bool ordenMayores(const string& nombreFichero, std::string args) {
         numeroDeUsuariosAMostrar = numUsuarios;
     }
     ordenar(usuarios, numUsuarios, numeroDeUsuariosAMostrar);
-    imprimirUsuarios(usuarios, numeroDeUsuariosAMostrar);
+    imprimirUsuarios(usuarios, numeroDeUsuariosAMostrar, numUsuarios);
     return true;
 }
 /* Pre: ---
