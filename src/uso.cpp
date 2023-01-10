@@ -9,6 +9,7 @@
 #include "uso.hpp"
 #include <cstdio>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <string>
 
@@ -21,9 +22,9 @@ using namespace std;
 void pantallaUsos(const string nombreFichero, const unsigned long numeroUsosTraslado,
                   const unsigned long numeroUsosCirculares, const unsigned long numeroTotalUsos) {
     cout << "Fichero de usos seleccionado actualmente: " << nombreFichero << "." << endl;
-    cout << "Número de usos como traslado: " << numeroUsosTraslado << endl;
-    cout << "Número de usos circulares: "  << numeroUsosCirculares << endl;
-    cout << "Número total de usos: " << numeroTotalUsos << endl;
+    cout << "Número de usos como traslado: " << right << setw(8) << numeroUsosTraslado << endl;
+    cout << "Número de usos circulares: "  << right << setw(11) << numeroUsosCirculares << endl;
+    cout << "Número total de usos: " << right << setw(16) << numeroTotalUsos << endl;
 }
 
 /*
