@@ -230,7 +230,7 @@ bool ordenDestinos(const string& nombreFichero, const string& nombreFicheroAEscr
         return false;
     }
 
-    unsigned destinosMasFrecuentes[NUM_ESTACIONES];
+    unsigned destinosMasFrecuentes[NUM_ESTACIONES] = {};
     calcularDestinosMasFrecuentes(viajes, destinosMasFrecuentes);
 
     escribirInformeDestinos(*flujo, viajes, destinosMasFrecuentes);
