@@ -1,7 +1,7 @@
 /*********************************************************************************************\
  * Programación 1. Trabajo obligatorio
  * Autores: Jaime Alonso y Hugo Cornago
- * Ultima revisión: ¡¡¡!!!
+ * Ultima revisión: 10-01-2023
  * Resumen: Fichero de implementación del módulo principal que implementa el trabajo
  *          obligatorio de Programación 1 del curso 2022-23.
 \*********************************************************************************************/
@@ -20,8 +20,19 @@
 #include "uso.hpp"
 using namespace std;
 
-const string NOMBRE_FICHERO_USUARIOS {"datos/usuarios.csv"};
 
+/* 
+ * Pre: ---
+ * Post: Imprime en pantalla el fichero en la ruta <ruta>
+ */
+void imprimirFichero(const string& ruta)
+{
+    ifstream fichero {ruta};
+    string linea;
+    while (getline(fichero, linea)) {
+        cout << linea << endl;
+    }
+}
 /* Pre: ---
  * Post: Imprime al usuario una lista de los posibles fichero que 
  *       estan disponibles para el programa y pregunta cual quiere elegir.
@@ -29,20 +40,15 @@ const string NOMBRE_FICHERO_USUARIOS {"datos/usuarios.csv"};
  */
 string selectorDeFichero() {
     cout << "Elección de ficheros de usos y usuarios. Opciones disponibles: " << endl;
-    cout << "16: octubre 2016 a marzo 2017" << endl;
-    cout << "17: marzo 2017 a agosto 2017" << endl;
-    cout << "t1: datos para pruebas (10 líneas)" << endl;
-    cout << "t2: datos para pruebas (2000 líneas)" << endl;
+    imprimirFichero(FICHERO_OPCIONES);
     cout << "Introduzca una opción: ";
 
     string opcion;
-    // getline(cin, opcion);
     cin >> opcion;
 
-    /* Ruta relavtiva */
-    string ruta_fichero = "datos/usos-" + opcion + ".csv";
-
-    return ruta_fichero;
+    /* Ruta relativa */
+    string rutaFichero = construirNombreFicheroUsos(opcion);
+    return rutaFichero;
 }
 
 /* Pre: ---
@@ -125,7 +131,7 @@ bool ordenEstadisticas()
 {
     /* Inicializar estadisticas a 0 */
     unsigned estadisticas[NUM_EDADES][NUM_GENEROS] = {};
-    if (!obtenerEstadisticas(NOMBRE_FICHERO_USUARIOS, estadisticas)) return false;
+    if (!obtenerEstadisticas(FICHERO_USUARIOS, estadisticas)) return false;
     imprimirEstadisticas(estadisticas);
     return true;
 }
@@ -135,7 +141,7 @@ bool ordenEstadisticas()
 bool ordenUsuario(const string& usuarioABuscar) {
     string genero, rangoEdad;
     unsigned IDUsuario = stoi(usuarioABuscar);
-    if (buscarUsuario(NOMBRE_FICHERO_USUARIOS, IDUsuario, genero, rangoEdad)) {
+    if (buscarUsuario(FICHERO_USUARIOS, IDUsuario, genero, rangoEdad)) {
         if (genero == "M") {
             cout << "El usuario " << IDUsuario << " está en el rango de edad \""
                  << rangoEdad << "\"." << endl;
@@ -148,7 +154,7 @@ bool ordenUsuario(const string& usuarioABuscar) {
         }
     } else {
         cout << "El/la usuario/a " << IDUsuario << " no aparece en el fichero \""
-             << NOMBRE_FICHERO_USUARIOS << "\"." << endl;
+             << FICHERO_USUARIOS << "\"." << endl;
     }
     return true;
 }
@@ -157,7 +163,7 @@ bool ordenUsuario(const string& usuarioABuscar) {
  */
 bool ordenMayores(const string& nombreFichero, std::string args) {
     unsigned numeroDeUsuariosAMostrar = stoi(args);
-    unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(NOMBRE_FICHERO_USUARIOS);
+    unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(FICHERO_USUARIOS);
     UsosUsuario usuarios[numUsuariosMAX];
 
     unsigned numUsuarios;
@@ -192,6 +198,7 @@ bool ordenInforme(const string& nombreFichero, std::string nombreFicheroAEscribi
              << "\"." << endl; 
         return false;
     };
+    cout << "Informe \"" << nombreFicheroAEscribir << "\" creado correctamente." << endl;
     return true;
 }
 
@@ -212,7 +219,6 @@ bool ordenDestinos(const string& nombreFichero, const string& nombreFicheroAEscr
             cerr << "No se ha podido escribir en el fichero \"" << nombreFicheroAEscribir
                  << "\"." << endl; 
             return false;
-
         }
     }
 
@@ -264,7 +270,8 @@ void imprimirOrdenesDisponibles () {
  */
 bool ejecutarOrden(const string& orden, string& nombreFichero) {
     if (orden == "AYUDA") {
-        imprimirOrdenesDisponibles();
+        imprimirFichero(FICHERO_AYUDA);
+        // imprimirOrdenesDisponibles();
     } else if (orden == "FICHERO") {
         while (!ordenFichero(nombreFichero));
     } else if (orden == "USOS") {
@@ -289,7 +296,10 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
         string nombreFicheroAEscribir;
         cout << "Escriba el nombre del fichero del informe" << endl
              << "(presione solo ENTRAR para escribirlo en la pantalla): ";
+
+        /* ignorar el salto de linea */
         cin.ignore();
+
         getline(cin, nombreFicheroAEscribir);
         ordenDestinos(nombreFichero, nombreFicheroAEscribir);
     } else if (orden == "FIN") {
