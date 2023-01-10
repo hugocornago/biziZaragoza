@@ -30,7 +30,7 @@ struct Usuario {
  * Post: Devuelve true is ha podido una linea del flujo y guarda en <usuario> los datos del siguiente
  *       usuario en el flujo.
  */
-bool leerUsuario(ifstream& fichero, Usuario& usuario);
+bool leerUsuario(istream& fichero, Usuario& usuario);
 
 /*
  * Pre:  «nombreFicheroUsuarios» es el nombre de un fichero que cumple con la sintaxis de la 

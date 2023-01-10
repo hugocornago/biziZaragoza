@@ -20,6 +20,19 @@
 #include "uso.hpp"
 using namespace std;
 
+
+/* 
+ * Pre: ---
+ * Post: Imprime en pantalla el fichero en la ruta <ruta>
+ */
+void imprimirFichero(const string& ruta)
+{
+    ifstream fichero {ruta};
+    string linea;
+    while (getline(fichero, linea)) {
+        cout << linea << endl;
+    }
+}
 /* Pre: ---
  * Post: Imprime al usuario una lista de los posibles fichero que 
  *       estan disponibles para el programa y pregunta cual quiere elegir.
@@ -27,18 +40,15 @@ using namespace std;
  */
 string selectorDeFichero() {
     cout << "Elección de ficheros de usos y usuarios. Opciones disponibles: " << endl;
-    cout << "16: octubre 2016 a marzo 2017" << endl;
-    cout << "17: marzo 2017 a agosto 2017" << endl;
-    cout << "t1: datos para pruebas (10 líneas)" << endl;
-    cout << "t2: datos para pruebas (2000 líneas)" << endl;
+    imprimirFichero(FICHERO_OPCIONES);
     cout << "Introduzca una opción: ";
 
     string opcion;
     cin >> opcion;
 
     /* Ruta relativa */
-    string construirNombreFicheroUsos(opcion);
-    return construirNombreFicheroUsos;
+    string rutaFichero = construirNombreFicheroUsos(opcion);
+    return rutaFichero;
 }
 
 /* Pre: ---
@@ -260,7 +270,8 @@ void imprimirOrdenesDisponibles () {
  */
 bool ejecutarOrden(const string& orden, string& nombreFichero) {
     if (orden == "AYUDA") {
-        imprimirOrdenesDisponibles();
+        imprimirFichero(FICHERO_AYUDA);
+        // imprimirOrdenesDisponibles();
     } else if (orden == "FICHERO") {
         while (!ordenFichero(nombreFichero));
     } else if (orden == "USOS") {
