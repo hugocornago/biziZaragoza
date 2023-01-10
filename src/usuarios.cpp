@@ -92,6 +92,9 @@ unsigned indiceRangoEdad(const string rangoEdad) {
  */
 unsigned obtenerNumeroDeUsuarios(const string& nombreFicheroUsuarios) {
     ifstream fichero {nombreFicheroUsuarios};
+    if (!fichero.is_open()) {
+        return 0;
+    }
 
     /* ignorar la cabezera */
     string linea;

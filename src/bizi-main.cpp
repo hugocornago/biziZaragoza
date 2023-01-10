@@ -165,10 +165,19 @@ bool ordenUsuario(const string& usuarioABuscar) {
 bool ordenMayores(const string& nombreFichero, std::string args) {
     unsigned numeroDeUsuariosAMostrar = stoi(args);
     unsigned numUsuariosMAX = obtenerNumeroDeUsuarios(FICHERO_USUARIOS);
+    if (numUsuariosMAX == 0) {
+        cerr << "No se ha podido leer el fichero usuarios \"" << FICHERO_USUARIOS << "\". (o no existen usuarios en el mismo)"
+             << endl;
+        return false;
+    }
     UsosUsuario usuarios[numUsuariosMAX];
 
     unsigned numUsuarios;
-    obtenerUsosPorUsuario(nombreFichero, usuarios, numUsuarios);
+    if (!obtenerUsosPorUsuario(nombreFichero, usuarios, numUsuarios)) {
+        cerr << "No se ha podido leer el fichero de ordenes \"" << nombreFichero << "\"." << endl;
+        return false;
+    };
+
     if (numeroDeUsuariosAMostrar > numUsuarios) {
         numeroDeUsuariosAMostrar = numUsuarios;
     }
@@ -251,6 +260,8 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
         cout << endl;
         imprimirFichero(FICHERO_AYUDA);
     } else if (orden == "FICHERO") {
+        /* mientras que no se haya podido leer correctamente un fichero
+         * repetir la ordenFichero */
         while (!ordenFichero(nombreFichero));
     } else if (orden == "USOS") {
         ordenUsos(nombreFichero);
@@ -263,13 +274,13 @@ bool ejecutarOrden(const string& orden, string& nombreFichero) {
         cin >> usuario;
         ordenUsuario(usuario);
     } else if (orden == "MAYORES") {
-        string args;
-        cin >> args;
-        ordenMayores(nombreFichero, args);
+        string numeroMayores;
+        cin >> numeroMayores;
+        ordenMayores(nombreFichero, numeroMayores);
     } else if (orden == "INFORME") {
-        string args;
-        cin >> args;
-        ordenInforme(nombreFichero, args);
+        string nombreFicheroInforme;
+        cin >> nombreFicheroInforme;
+        ordenInforme(nombreFichero, nombreFicheroInforme);
     } else if (orden == "DESTINOS") {
         string nombreFicheroAEscribir;
         cout << "Escriba el nombre del fichero del informe" << endl

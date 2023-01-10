@@ -26,9 +26,10 @@ string construirNombreFicheroUsos(const string opcion){
     return RUTA_DATOS + PREFIJO_USOS + opcion + EXTENSION;
 }
 
-/* leer N lineas de un fichero */
-/* guardar en un vector de strings */
-/* string  lineas[N]*/
+/*
+ * Pre: vector_lineas debe tener <numLineas>.
+ * Post: Lee <numLineas> de <nombreFichero> y las almacena en <vector_lineas>
+ */
 bool leerNLineas(string nombreFichero, string vector_lineas[], unsigned numLineas) {
     ifstream fichero {nombreFichero};
 
@@ -45,7 +46,11 @@ bool leerNLineas(string nombreFichero, string vector_lineas[], unsigned numLinea
     return true;
 }
 
-/* guardar en un fichero nuevo */
+/* 
+ * Pre: <vector_lineas> contiene <longitud> o más elementos.
+ * Post: Escribe en <nombreFichero>, <longitud> elementos de <vector_lineas> 
+ *       separados por un salto de linea.
+*/
 bool escribirFichero (string nombreFichero, string vector_lineas[], unsigned longitud) {
     ofstream fichero {nombreFichero};
     if (!fichero.is_open()) {
@@ -59,6 +64,11 @@ bool escribirFichero (string nombreFichero, string vector_lineas[], unsigned lon
     return true;
 }
 
+/* 
+ * Pre: ---
+ * Post: Escribe dos ficheros (datos/usos-t1.csv) y (datos/usos-t2.csv) basandose en la especificación
+ *       del enunciado.
+*/
 int main() {
     const string opcion {"16"};
     const string opcion1 {"t1"};
