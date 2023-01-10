@@ -61,7 +61,7 @@ bool ordenFichero(string& nombreFichero) {
 
     ifstream fichero_abierto {nombre_fichero};
     if (!fichero_abierto.is_open()) {
-        cerr << "No se ha podido leer el fichero \"" << nombre_fichero << "\"" << endl;
+        cerr << "No se ha podido leer el fichero \"" << nombre_fichero << "\"" << endl << endl;
         return false;
     }
 
@@ -248,6 +248,7 @@ bool ordenDestinos(const string& nombreFichero, const string& nombreFicheroAEscr
  */
 bool ejecutarOrden(const string& orden, string& nombreFichero) {
     if (orden == "AYUDA") {
+        cout << endl;
         imprimirFichero(FICHERO_AYUDA);
     } else if (orden == "FICHERO") {
         while (!ordenFichero(nombreFichero));
